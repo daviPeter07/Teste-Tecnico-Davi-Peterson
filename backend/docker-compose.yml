@@ -1,0 +1,15 @@
+services:
+    db:
+        image: postgres:16
+        container_name: systock_db
+        ports:
+            - "127.0.0.1:${DB_PORT:-5533}:5432"
+        environment:
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - systock_pgdata:/var/lib/postgresql/data
+
+volumes:
+    systock_pgdata:
