@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/health', function () {
+Route::get('/', function () {
     return response()->json([
         'message' => 'Healthcheck',
         'status' => 'OK',
