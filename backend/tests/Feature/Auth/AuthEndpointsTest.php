@@ -20,11 +20,13 @@ class AuthEndpointsTest extends TestCase
         $response = $this->postJson('/api/login', [
             'email' => $user->email,
             'password' => '123456',
+            'device_name' => 'phpunit',
         ]);
 
         $response->assertStatus(200)
             ->assertJsonPath('message', 'Login realizado com sucesso.')
             ->assertJsonPath('data.email', $user->email)
+            ->assertJsonPath('token_type', 'Bearer')
             ->assertJsonStructure(['token']);
 
         $this->assertDatabaseHas('personal_access_tokens', [
@@ -43,10 +45,12 @@ class AuthEndpointsTest extends TestCase
         $response = $this->postJson('/api/login', [
             'email' => 'wrong@example.com',
             'password' => 'wrong-pass',
+            'device_name' => 'phpunit',
         ]);
 
-        $response->assertStatus(401)
-            ->assertJsonPath('message', 'Credenciais inválidas.');
+        $response->assertStatus(422)
+            ->assertJsonPath('message', 'As credenciais fornecidas estão incorretas.')
+            ->assertJsonPath('errors.email.0', 'As credenciais fornecidas estão incorretas.');
     }
 
     public function test_it_returns_authenticated_user_on_me_and_allows_logout(): void
@@ -59,6 +63,7 @@ class AuthEndpointsTest extends TestCase
         $loginResponse = $this->postJson('/api/login', [
             'email' => $user->email,
             'password' => '123456',
+            'device_name' => 'phpunit',
         ]);
 
         $token = $loginResponse->json('token');

@@ -47,6 +47,7 @@ abstract class BaseFormRequest extends FormRequest
             'cpf' => 'CPF',
             'email' => 'e-mail',
             'password' => 'senha',
+            'device_name' => 'dispositivo',
 
             'user_id' => 'usuário',
             'price' => 'preço',
