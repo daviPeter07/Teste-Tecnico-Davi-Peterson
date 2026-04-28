@@ -11,6 +11,17 @@ class UserService
     {
         $search = $filters['search'] ?? null;
         $perPage = $filters['per_page'] ?? 10;
+        $sortBy = $filters['sort_by'] ?? 'created_at';
+        $sortDir = strtolower((string) ($filters['sort_dir'] ?? 'desc'));
+
+        $allowedSortFields = ['created_at', 'name', 'email'];
+        if (! in_array($sortBy, $allowedSortFields, true)) {
+            $sortBy = 'created_at';
+        }
+
+        if (! in_array($sortDir, ['asc', 'desc'], true)) {
+            $sortDir = 'desc';
+        }
 
         return User::query()
             // se search tiver valor, aplica o filtro
@@ -22,8 +33,7 @@ class UserService
                         ->orWhere('cpf', 'ILIKE', "%{$search}%");
                 });
             })
-            // ordena do mais recente paginado
-            ->latest()
+            ->orderBy($sortBy, $sortDir)
             ->paginate($perPage);
     }
 

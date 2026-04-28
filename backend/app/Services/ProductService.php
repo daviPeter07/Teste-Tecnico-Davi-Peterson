@@ -12,6 +12,17 @@ class ProductService
         $search = $filters['search'] ?? null;
         $userId = $filters['user_id'] ?? null;
         $perPage = $filters['per_page'] ?? 10;
+        $sortBy = $filters['sort_by'] ?? 'created_at';
+        $sortDir = strtolower((string) ($filters['sort_dir'] ?? 'desc'));
+
+        $allowedSortFields = ['created_at', 'name', 'price'];
+        if (! in_array($sortBy, $allowedSortFields, true)) {
+            $sortBy = 'created_at';
+        }
+
+        if (! in_array($sortDir, ['asc', 'desc'], true)) {
+            $sortDir = 'desc';
+        }
 
         return Product::query()
             ->with('user')
@@ -22,7 +33,7 @@ class ProductService
                         ->orWhere('description', 'ILIKE', "%{$search}%");
                 });
             })
-            ->latest()
+            ->orderBy($sortBy, $sortDir)
             ->paginate($perPage);
     }
 

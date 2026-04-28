@@ -24,7 +24,7 @@ const totalPages = ref(1);
 const page = ref(1);
 const perPage = ref(10);
 const search = ref("");
-const selectedUserId = ref<number | null>(null);
+const selectedSort = ref("recentes");
 
 const isLoading = ref(false);
 const isFormLoading = ref(false);
@@ -39,14 +39,20 @@ const productFormRef = ref<InstanceType<typeof ProductForm> | null>(null);
 
 const { getApiErrorMessage } = useApiError();
 
-const userFilterItems = computed(() => {
-  return [
-    { title: "Todos", value: null },
-    ...users.value.map((user) => ({ title: user.name, value: user.id })),
-  ];
-});
-
 const isEditMode = computed(() => Boolean(selectedProduct.value));
+
+const sortParams = computed(() => {
+  switch (selectedSort.value) {
+    case "antigos":
+      return { sort_by: "created_at", sort_dir: "asc" };
+    case "az":
+      return { sort_by: "name", sort_dir: "asc" };
+    case "za":
+      return { sort_by: "name", sort_dir: "desc" };
+    default:
+      return { sort_by: "created_at", sort_dir: "desc" };
+  }
+});
 
 const fetchUsers = async () => {
   try {
@@ -65,14 +71,11 @@ const fetchProducts = async () => {
     const params: Record<string, string | number> = {
       page: page.value,
       per_page: perPage.value,
+      ...sortParams.value,
     };
 
     if (search.value.trim()) {
       params.search = search.value.trim();
-    }
-
-    if (selectedUserId.value) {
-      params.user_id = selectedUserId.value;
     }
 
     const response = await listProductsRequest(params);
@@ -174,8 +177,12 @@ onMounted(async () => {
   await fetchProducts();
 });
 
-watch([page, perPage, search, selectedUserId], async () => {
+watch([page, perPage, search, selectedSort], async () => {
   await fetchProducts();
+});
+
+watch(selectedSort, () => {
+  page.value = 1;
 });
 </script>
 
@@ -191,16 +198,18 @@ watch([page, perPage, search, selectedUserId], async () => {
   >
     <template #filters>
       <VSelect
-        v-model="selectedUserId"
-        label="Usuário"
+        v-model="selectedSort"
+        label="Ordenar"
         variant="outlined"
         density="comfortable"
         color="deep-orange"
         class="auth-input w-full lg:w-64"
-        :items="userFilterItems"
-        item-title="title"
-        item-value="value"
-        clearable
+        :items="[
+          { title: 'Mais recentes', value: 'recentes' },
+          { title: 'Mais antigos', value: 'antigos' },
+          { title: 'Nome (A-Z)', value: 'az' },
+          { title: 'Nome (Z-A)', value: 'za' },
+        ]"
       />
     </template>
 

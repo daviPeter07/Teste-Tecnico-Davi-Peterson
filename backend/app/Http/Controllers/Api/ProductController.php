@@ -26,6 +26,8 @@ class ProductController extends Controller
             'search' => $request->query('search'),
             'user_id' => $request->query('user_id'),
             'per_page' => $request->query('per_page', 10),
+            'sort_by' => $request->query('sort_by', 'created_at'),
+            'sort_dir' => $request->query('sort_dir', 'desc'),
         ]);
 
         return response()->json([
@@ -43,6 +45,8 @@ class ProductController extends Controller
             'search' => $request->query('search'),
             'user_id' => $user->id,
             'per_page' => $request->query('per_page', 10),
+            'sort_by' => $request->query('sort_by', 'created_at'),
+            'sort_dir' => $request->query('sort_dir', 'desc'),
         ]);
 
         return response()->json([

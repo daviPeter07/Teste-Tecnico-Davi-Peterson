@@ -24,6 +24,8 @@ class UserController extends Controller
         $users = $this->userService->listUsers([
             'search' => $request->query('search'),
             'per_page' => $request->query('per_page', 10),
+            'sort_by' => $request->query('sort_by', 'created_at'),
+            'sort_dir' => $request->query('sort_dir', 'desc'),
         ]);
 
         return response()->json([

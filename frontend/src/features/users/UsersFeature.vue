@@ -24,7 +24,7 @@ const isLoading = ref(false);
 const isFormLoading = ref(false);
 const isDeleteLoading = ref(false);
 const requestError = ref("");
-const selectedStatus = ref("Todos");
+const selectedSort = ref("recentes");
 
 const selectedUser = ref<User | null>(null);
 const isFormOpen = ref(false);
@@ -40,20 +40,28 @@ const { page, perPage, search, queryParams, setPage, setSearch } =
 
 const isEditMode = computed(() => Boolean(selectedUser.value));
 
+const sortParams = computed(() => {
+  switch (selectedSort.value) {
+    case "antigos":
+      return { sort_by: "created_at", sort_dir: "asc" };
+    case "az":
+      return { sort_by: "name", sort_dir: "asc" };
+    case "za":
+      return { sort_by: "name", sort_dir: "desc" };
+    default:
+      return { sort_by: "created_at", sort_dir: "desc" };
+  }
+});
+
 const fetchUsers = async () => {
   isLoading.value = true;
   requestError.value = "";
 
   try {
-    const params: Record<string, string | number> = {
+    const response = await listUsersRequest({
       ...queryParams.value,
-    };
-
-    if (selectedStatus.value !== "Todos") {
-      params.status = selectedStatus.value.toLowerCase();
-    }
-
-    const response = await listUsersRequest(params);
+      ...sortParams.value,
+    });
     users.value = response.data ?? [];
     totalPages.value = response.meta?.last_page ?? 1;
   } catch (error) {
@@ -146,11 +154,11 @@ onMounted(async () => {
   await fetchUsers();
 });
 
-watch([page, perPage, search, selectedStatus], async () => {
+watch([page, perPage, search, selectedSort], async () => {
   await fetchUsers();
 });
 
-watch(selectedStatus, () => {
+watch(selectedSort, () => {
   setPage(1);
 });
 </script>
@@ -167,13 +175,18 @@ watch(selectedStatus, () => {
   >
     <template #filters>
       <VSelect
-        v-model="selectedStatus"
-        label="Status"
+        v-model="selectedSort"
+        label="Ordenar"
         variant="outlined"
         density="comfortable"
         color="deep-orange"
         class="auth-input w-full lg:w-56"
-        :items="['Todos', 'Ativos', 'Inativos']"
+        :items="[
+          { title: 'Mais recentes', value: 'recentes' },
+          { title: 'Mais antigos', value: 'antigos' },
+          { title: 'Nome (A-Z)', value: 'az' },
+          { title: 'Nome (Z-A)', value: 'za' },
+        ]"
       />
     </template>
 
