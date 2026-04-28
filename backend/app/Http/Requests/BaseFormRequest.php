@@ -33,6 +33,7 @@ abstract class BaseFormRequest extends FormRequest
             'min' => 'O campo :attribute deve ter pelo menos :min caracteres.',
             'numeric' => 'O campo :attribute deve ser um número.',
             'decimal' => 'O campo :attribute deve ter um formato decimal válido.',
+            'gt' => 'O campo :attribute deve ser maior que :value.',
             'gt.numeric' => 'O campo :attribute deve ser maior que :value.',
             'exists' => 'O campo :attribute selecionado é inválido.',
             'nullable' => 'O campo :attribute pode ser nulo.',
