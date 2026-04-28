@@ -3,9 +3,19 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 abstract class BaseFormRequest extends FormRequest
 {
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Dados invalidos.',
+            'errors' => $validator->errors(),
+        ], 422));
+    }
+
     public function authorize(): bool
     {
         return true;
