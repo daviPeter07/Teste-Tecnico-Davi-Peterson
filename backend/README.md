@@ -88,6 +88,16 @@ Ao rodar `migrate --seed`, são criados:
 - usuários fake com `name`, `cpf`, `email`, `password`
 - produtos fake vinculados aos usuários (`user_id`, `name`, `price`, `description`)
 
+Gerar dados fake sob demanda:
+
+```bash
+# popular com dados fake usando o seeder principal
+herd php artisan db:seed
+
+# recriar banco e popular novamente do zero
+herd php artisan migrate:fresh --seed
+```
+
 # Comandos
 
 Executar testes:

@@ -17,6 +17,7 @@ import {
 } from "@/services/users";
 import type { UpdateUserSchemaOutput } from "@/schemas/users/user.schema";
 import type { CreateUserPayload, User } from "@/types/user";
+import { formatCpf } from "@/utils/cpf";
 
 const users = ref<User[]>([]);
 const totalPages = ref(1);
@@ -102,7 +103,9 @@ const onConfirmDialogChange = (value: boolean) => {
   }
 };
 
-const submitForm = async (payload: CreateUserPayload | UpdateUserSchemaOutput) => {
+const submitForm = async (
+  payload: CreateUserPayload | UpdateUserSchemaOutput,
+) => {
   isFormLoading.value = true;
   requestError.value = "";
 
@@ -277,7 +280,7 @@ watch(selectedSort, () => {
           <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
             <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">CPF</p>
             <p class="mt-1 font-medium text-zinc-900">
-              {{ selectedUser?.cpf }}
+              {{ selectedUser?.cpf ? formatCpf(selectedUser.cpf) : "-" }}
             </p>
           </div>
         </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
@@ -17,6 +17,7 @@ import AppLabel from "@/components/ui/AppLabel.vue";
 import { useApiError } from "@/composables/useApiError";
 import { registerSchema } from "@/schemas/auth/register.schema";
 import { useAuthStore } from "@/stores/auth";
+import { formatCpf, onlyDigits } from "@/utils/cpf";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -39,6 +40,13 @@ const [name] = defineField("name");
 const [cpf] = defineField("cpf");
 const [email] = defineField("email");
 const [password] = defineField("password");
+
+const cpfMasked = computed({
+  get: () => formatCpf(cpf.value ?? ""),
+  set: (value: string) => {
+    cpf.value = onlyDigits(value).slice(0, 11);
+  },
+});
 
 const onSubmit = handleSubmit(async (values) => {
   requestError.value = "";
@@ -73,9 +81,9 @@ const onSubmit = handleSubmit(async (values) => {
 
         <AppLabel class="mt-1" text="CPF" :icon="Fingerprint" />
         <AppInput
-          v-model="cpf"
+          v-model="cpfMasked"
           aria-label="CPF"
-          placeholder="Somente números"
+          placeholder="000.000.000-00"
           autocomplete="off"
           :error-messages="errors.cpf"
         />

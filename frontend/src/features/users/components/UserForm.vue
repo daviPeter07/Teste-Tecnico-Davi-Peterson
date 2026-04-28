@@ -3,9 +3,13 @@ import { computed } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import AppInput from "@/components/ui/AppInput.vue";
-import { createUserSchema, updateUserSchema } from "@/schemas/users/user.schema";
+import {
+  createUserSchema,
+  updateUserSchema,
+} from "@/schemas/users/user.schema";
 import type { UpdateUserSchemaOutput } from "@/schemas/users/user.schema";
 import type { CreateUserPayload, User } from "@/types/user";
+import { formatCpf, onlyDigits } from "@/utils/cpf";
 
 type Props = {
   initialUser?: User | null;
@@ -39,6 +43,13 @@ const [cpf] = defineField("cpf");
 const [email] = defineField("email");
 const [password] = defineField("password");
 
+const cpfMasked = computed({
+  get: () => formatCpf(cpf.value ?? ""),
+  set: (value: string) => {
+    cpf.value = onlyDigits(value).slice(0, 11);
+  },
+});
+
 const onSubmit = handleSubmit((values) => {
   emit("submit", values);
 });
@@ -49,8 +60,17 @@ defineExpose({ onSubmit, isEditMode });
 <template>
   <form class="grid gap-4 md:grid-cols-2" @submit.prevent="onSubmit">
     <AppInput v-model="name" placeholder="Nome" :error-messages="errors.name" />
-    <AppInput v-model="cpf" placeholder="CPF" :error-messages="errors.cpf" />
-    <AppInput v-model="email" placeholder="E-mail" :error-messages="errors.email" class="md:col-span-2" />
+    <AppInput
+      v-model="cpfMasked"
+      placeholder="000.000.000-00"
+      :error-messages="errors.cpf"
+    />
+    <AppInput
+      v-model="email"
+      placeholder="E-mail"
+      :error-messages="errors.email"
+      class="md:col-span-2"
+    />
     <AppInput
       v-model="password"
       :placeholder="isEditMode ? 'Nova senha' : 'Senha'"
