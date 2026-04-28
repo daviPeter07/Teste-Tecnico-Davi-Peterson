@@ -1,11 +1,6 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
-
-export type AuthUser = {
-  id: number;
-  name: string;
-  email: string;
-};
+import type { AuthUser } from "@/types/auth";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref<string | null>(localStorage.getItem("auth_token"));
@@ -13,7 +8,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isAuthenticated = computed(() => Boolean(token.value));
 
-  function setToken(nextToken: string | null) {
+  const setToken = (nextToken: string | null) => {
     token.value = nextToken;
 
     if (nextToken) {
@@ -22,16 +17,16 @@ export const useAuthStore = defineStore("auth", () => {
     }
 
     localStorage.removeItem("auth_token");
-  }
+  };
 
-  function setUser(nextUser: AuthUser | null) {
+  const setUser = (nextUser: AuthUser | null) => {
     user.value = nextUser;
-  }
+  };
 
-  function clearSession() {
+  const clearSession = () => {
     setToken(null);
     setUser(null);
-  }
+  };
 
   return {
     token,
