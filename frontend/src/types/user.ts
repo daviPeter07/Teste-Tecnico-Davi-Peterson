@@ -7,9 +7,16 @@ export type User = {
   updated_at?: string;
 };
 
-export type UserPayload = {
+export type CreateUserPayload = {
   name: string;
   email: string;
   cpf: string;
+  password: string;
+};
+
+export type UpdateUserPayload = {
+  name?: string;
+  email?: string;
+  cpf?: string;
   password?: string;
 };
