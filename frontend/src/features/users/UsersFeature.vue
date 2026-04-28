@@ -15,6 +15,7 @@ import {
   listUsersRequest,
   updateUserRequest,
 } from "@/services/users";
+import type { UpdateUserSchemaOutput } from "@/schemas/users/user.schema";
 import type { CreateUserPayload, User } from "@/types/user";
 
 const users = ref<User[]>([]);
@@ -93,7 +94,7 @@ const onConfirmDialogChange = (value: boolean) => {
   }
 };
 
-const submitForm = async (payload: CreateUserPayload) => {
+const submitForm = async (payload: CreateUserPayload | UpdateUserSchemaOutput) => {
   isFormLoading.value = true;
   requestError.value = "";
 
@@ -101,7 +102,7 @@ const submitForm = async (payload: CreateUserPayload) => {
     if (selectedUser.value) {
       await updateUserRequest(selectedUser.value.id, payload);
     } else {
-      await createUserRequest(payload);
+      await createUserRequest(payload as CreateUserPayload);
     }
 
     isFormOpen.value = false;

@@ -22,10 +22,14 @@ export const createUserSchema = z.object({
 
 export const updateUserSchema = createUserSchema.extend({
   password: z
-    .string()
-    .min(6, { error: "A senha deve ter no mínimo 6 caracteres." })
-    .optional(),
+    .union([
+      z.string().min(6, { error: "A senha deve ter no mínimo 6 caracteres." }),
+      z.literal(""),
+    ])
+    .optional()
+    .transform((value) => (value === "" ? undefined : value)),
 });
 
 export type CreateUserSchemaInput = z.input<typeof createUserSchema>;
 export type UpdateUserSchemaInput = z.input<typeof updateUserSchema>;
+export type UpdateUserSchemaOutput = z.output<typeof updateUserSchema>;

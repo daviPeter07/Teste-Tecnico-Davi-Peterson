@@ -3,7 +3,8 @@ import { computed } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import AppInput from "@/components/ui/AppInput.vue";
-import { createUserSchema } from "@/schemas/users/user.schema";
+import { createUserSchema, updateUserSchema } from "@/schemas/users/user.schema";
+import type { UpdateUserSchemaOutput } from "@/schemas/users/user.schema";
 import type { CreateUserPayload, User } from "@/types/user";
 
 type Props = {
@@ -15,13 +16,16 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  submit: [payload: CreateUserPayload];
+  submit: [payload: CreateUserPayload | UpdateUserSchemaOutput];
 }>();
 
 const isEditMode = computed(() => Boolean(props.initialUser));
+const validationSchema = computed(() =>
+  toTypedSchema(isEditMode.value ? updateUserSchema : createUserSchema),
+);
 
 const { errors, defineField, handleSubmit } = useForm({
-  validationSchema: toTypedSchema(createUserSchema),
+  validationSchema,
   initialValues: {
     name: props.initialUser?.name ?? "",
     cpf: props.initialUser?.cpf ?? "",
