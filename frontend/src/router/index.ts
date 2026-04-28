@@ -1,57 +1,57 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "../stores/auth";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
-      redirect: '/dashboard/users',
+      path: "/",
+      redirect: "/dashboard/users",
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('../pages/LoginPage.vue'),
+      path: "/login",
+      name: "login",
+      component: () => import("../pages/LoginPage.vue"),
       meta: { guestOnly: true },
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../pages/RegisterPage.vue'),
+      path: "/register",
+      name: "register",
+      component: () => import("../pages/RegisterPage.vue"),
       meta: { guestOnly: true },
     },
     {
-      path: '/dashboard',
-      component: () => import('../features/layout/DashboardShell.vue'),
+      path: "/dashboard",
+      component: () => import("../features/layout/DashboardShell.vue"),
       meta: { requiresAuth: true },
       children: [
         {
-          path: 'users',
-          name: 'dashboard-users',
-          component: () => import('../pages/UsersPage.vue'),
+          path: "users",
+          name: "dashboard-users",
+          component: () => import("../pages/UsersPage.vue"),
         },
         {
-          path: 'products',
-          name: 'dashboard-products',
-          component: () => import('../pages/ProductsPage.vue'),
+          path: "products",
+          name: "dashboard-products",
+          component: () => import("../pages/ProductsPage.vue"),
         },
       ],
     },
   ],
-})
+});
 
 router.beforeEach((to) => {
-  const authStore = useAuthStore()
+  const authStore = useAuthStore();
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    return { name: 'login' }
+    return { name: "login" };
   }
 
   if (to.meta.guestOnly && authStore.isAuthenticated) {
-    return { name: 'dashboard-users' }
+    return { name: "dashboard-users" };
   }
 
-  return true
-})
+  return true;
+});
 
-export { router }
+export { router };
