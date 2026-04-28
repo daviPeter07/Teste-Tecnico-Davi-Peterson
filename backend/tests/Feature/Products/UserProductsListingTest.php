@@ -5,6 +5,7 @@ namespace Tests\Feature\Products;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class UserProductsListingTest extends TestCase
@@ -18,6 +19,8 @@ class UserProductsListingTest extends TestCase
 
         Product::factory()->count(2)->create(['user_id' => $targetUser->id]);
         Product::factory()->count(3)->create(['user_id' => $otherUser->id]);
+
+        Sanctum::actingAs($targetUser);
 
         $response = $this->getJson("/api/users/{$targetUser->id}/products");
 

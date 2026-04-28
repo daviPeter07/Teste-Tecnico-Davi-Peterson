@@ -20,6 +20,8 @@ class ProductController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Product::class);
+
         $products = $this->productService->listProducts([
             'search' => $request->query('search'),
             'user_id' => $request->query('user_id'),
@@ -35,6 +37,8 @@ class ProductController extends Controller
 
     public function productsByUser(Request $request, User $user): JsonResponse
     {
+        $this->authorize('view', $user);
+
         $products = $this->productService->listProducts([
             'search' => $request->query('search'),
             'user_id' => $user->id,
@@ -50,6 +54,8 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request): JsonResponse
     {
+        $this->authorize('create', Product::class);
+
         $product = $this->productService->createProduct($request->validated());
 
         return response()->json([
@@ -60,6 +66,8 @@ class ProductController extends Controller
 
     public function show(Product $product): JsonResponse
     {
+        $this->authorize('view', $product);
+
         $product = $this->productService->getProduct($product);
 
         return response()->json([
@@ -70,6 +78,8 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
+        $this->authorize('update', $product);
+
         $product = $this->productService->updateProduct($product, $request->validated());
 
         return response()->json([
@@ -80,6 +90,8 @@ class ProductController extends Controller
 
     public function destroy(Product $product): JsonResponse
     {
+        $this->authorize('delete', $product);
+
         $this->productService->deleteProduct($product);
 
         return response()->json([

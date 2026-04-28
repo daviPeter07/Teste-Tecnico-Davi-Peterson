@@ -19,6 +19,8 @@ class UserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', User::class);
+
         $users = $this->userService->listUsers([
             'search' => $request->query('search'),
             'per_page' => $request->query('per_page', 10),
@@ -43,6 +45,8 @@ class UserController extends Controller
 
     public function show(User $user): JsonResponse
     {
+        $this->authorize('view', $user);
+
         $user = $this->userService->getUserWithProducts($user);
 
         return response()->json([
@@ -53,6 +57,8 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
+        $this->authorize('update', $user);
+
         $user = $this->userService->updateUser($user, $request->validated());
 
         return response()->json([
@@ -63,6 +69,8 @@ class UserController extends Controller
 
     public function destroy(User $user): JsonResponse
     {
+        $this->authorize('delete', $user);
+
         $this->userService->deleteUser($user);
 
         return response()->json([
