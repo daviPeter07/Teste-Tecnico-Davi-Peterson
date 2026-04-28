@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Eye, Pencil, Trash2 } from "lucide-vue-next";
 import type { User } from "@/types/user";
+import { formatDate } from "@/utils/date";
 import { formatCpf } from "@/utils/cpf";
 
 type Props = {
@@ -24,6 +25,7 @@ const emit = defineEmits<{
           <th class="text-left">Nome</th>
           <th class="text-left">E-mail</th>
           <th class="text-left">CPF</th>
+          <th class="text-left">Lançado em</th>
           <th class="text-right">Ações</th>
         </tr>
       </thead>
@@ -36,6 +38,7 @@ const emit = defineEmits<{
           <td class="font-medium text-zinc-900">{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ formatCpf(user.cpf) }}</td>
+          <td>{{ formatDate(user.created_at) }}</td>
           <td>
             <div class="flex justify-end gap-2">
               <VTooltip text="Visualizar" location="top">

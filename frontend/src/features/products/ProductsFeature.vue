@@ -17,6 +17,7 @@ import {
 import { listUsersRequest } from "@/services/users";
 import type { CreateProductPayload, Product } from "@/types/product";
 import type { User } from "@/types/user";
+import { formatCurrency } from "@/utils/number";
 
 const products = ref<Product[]>([]);
 const users = ref<User[]>([]);
@@ -303,12 +304,7 @@ watch(selectedSort, () => {
               Preço
             </p>
             <p class="mt-1 font-medium text-zinc-900">
-              {{
-                new Intl.NumberFormat("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                }).format(selectedProduct?.price ?? 0)
-              }}
+              {{ formatCurrency(selectedProduct?.price) }}
             </p>
           </div>
         </div>
