@@ -17,7 +17,6 @@ const openForm = () => {
 <template>
   <DataTableShell
     title="Usuários"
-    subtitle="Padrão visual compartilhado para CRUD de usuários e produtos."
     search-placeholder="Buscar por nome, e-mail ou CPF"
     add-label="Novo usuário"
     :search-value="search"

@@ -35,8 +35,7 @@ onMounted(async () => {
           class="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4"
         >
           <div>
-            <p class="text-sm text-zinc-500">Painel administrativo</p>
-            <h2 class="text-lg font-semibold text-zinc-900">SYSTOCK</h2>
+            <h2 class="text-lg font-semibold text-zinc-900">Dashboard</h2>
           </div>
 
           <div class="flex items-center gap-4">

@@ -2,7 +2,7 @@
 import { Plus, Search } from "lucide-vue-next";
 
 type Props = {
-  title: string;
+  title?: string;
   subtitle?: string;
   searchValue?: string;
   searchPlaceholder?: string;
@@ -33,11 +33,6 @@ const onAdd = () => emit("add");
       class="flex flex-col gap-4 border-b border-zinc-200 pb-4 lg:flex-row lg:items-end lg:justify-between"
     >
       <div>
-        <p
-          class="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500"
-        >
-          Dashboard
-        </p>
         <h1 class="mt-1 text-2xl font-bold text-zinc-950">{{ props.title }}</h1>
         <p class="mt-1 text-sm text-zinc-600">{{ props.subtitle }}</p>
       </div>
