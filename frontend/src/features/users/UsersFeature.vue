@@ -27,12 +27,14 @@ const requestError = ref("");
 const selectedUser = ref<User | null>(null);
 const isFormOpen = ref(false);
 const isConfirmOpen = ref(false);
+const isViewOpen = ref(false);
 const userFormRef = ref<InstanceType<typeof UserForm> | null>(null);
 
 const { getApiErrorMessage } = useApiError();
-const { page, perPage, search, queryParams, setPage, setSearch } = usePaginatedTable({
-  initialPerPage: 10,
-});
+const { page, perPage, search, queryParams, setPage, setSearch } =
+  usePaginatedTable({
+    initialPerPage: 10,
+  });
 
 const isEditMode = computed(() => Boolean(selectedUser.value));
 
@@ -45,7 +47,10 @@ const fetchUsers = async () => {
     users.value = response.data ?? [];
     totalPages.value = response.meta?.last_page ?? 1;
   } catch (error) {
-    requestError.value = getApiErrorMessage(error, "Não foi possível carregar usuários.");
+    requestError.value = getApiErrorMessage(
+      error,
+      "Não foi possível carregar usuários.",
+    );
   } finally {
     isLoading.value = false;
   }
@@ -61,9 +66,22 @@ const openEditDialog = (user: User) => {
   isFormOpen.value = true;
 };
 
+const openViewDialog = (user: User) => {
+  selectedUser.value = user;
+  isViewOpen.value = true;
+};
+
 const openDeleteDialog = (user: User) => {
   selectedUser.value = user;
   isConfirmOpen.value = true;
+};
+
+const onConfirmDialogChange = (value: boolean) => {
+  isConfirmOpen.value = value;
+
+  if (!value) {
+    isDeleteLoading.value = false;
+  }
 };
 
 const submitForm = async (payload: CreateUserPayload) => {
@@ -80,7 +98,10 @@ const submitForm = async (payload: CreateUserPayload) => {
     isFormOpen.value = false;
     await fetchUsers();
   } catch (error) {
-    requestError.value = getApiErrorMessage(error, "Não foi possível salvar o usuário.");
+    requestError.value = getApiErrorMessage(
+      error,
+      "Não foi possível salvar o usuário.",
+    );
   } finally {
     isFormLoading.value = false;
   }
@@ -98,7 +119,10 @@ const confirmDelete = async () => {
     isConfirmOpen.value = false;
     await fetchUsers();
   } catch (error) {
-    requestError.value = getApiErrorMessage(error, "Não foi possível excluir o usuário.");
+    requestError.value = getApiErrorMessage(
+      error,
+      "Não foi possível excluir o usuário.",
+    );
   } finally {
     isDeleteLoading.value = false;
   }
@@ -133,13 +157,27 @@ watch([page, perPage, search], async () => {
       </VAlert>
 
       <LoadingState v-if="isLoading" message="Carregando usuários..." />
-      <EmptyState v-else-if="!users.length" description="Nenhum usuário encontrado para os filtros atuais." />
-      <UsersTable v-else :users="users" @edit="openEditDialog" @remove="openDeleteDialog" />
+      <EmptyState
+        v-else-if="!users.length"
+        description="Nenhum usuário encontrado para os filtros atuais."
+      />
+      <UsersTable
+        v-else
+        :users="users"
+        @view="openViewDialog"
+        @edit="openEditDialog"
+        @remove="openDeleteDialog"
+      />
     </template>
 
     <template #pagination>
       <div class="flex justify-end">
-        <VPagination :length="totalPages" :model-value="page" :total-visible="7" @update:model-value="setPage" />
+        <VPagination
+          :length="totalPages"
+          :model-value="page"
+          :total-visible="7"
+          @update:model-value="setPage"
+        />
       </div>
     </template>
   </DataTableShell>
@@ -153,16 +191,64 @@ watch([page, perPage, search], async () => {
     @update:model-value="isFormOpen = $event"
     @save="onDialogSave"
   >
-    <UserForm ref="userFormRef" :initial-user="selectedUser" @submit="submitForm" />
+    <UserForm
+      ref="userFormRef"
+      :initial-user="selectedUser"
+      @submit="submitForm"
+    />
   </AppFormDialog>
 
   <ConfirmDialog
     :model-value="isConfirmOpen"
     title="Excluir usuário"
-    description="Essa ação não pode ser desfeita."
+    :description="`Tem certeza que deseja excluir ${selectedUser?.name ?? 'este usuário'}? Essa ação não pode ser desfeita.`"
     confirm-label="Excluir"
     :loading="isDeleteLoading"
-    @update:model-value="isConfirmOpen = $event"
+    @update:model-value="onConfirmDialogChange"
     @confirm="confirmDelete"
   />
+
+  <VDialog
+    :model-value="isViewOpen"
+    max-width="560"
+    @update:model-value="isViewOpen = $event"
+  >
+    <VCard class="rounded-2xl border border-zinc-200">
+      <VCardTitle class="text-lg font-semibold text-zinc-900"
+        >Detalhes do usuário</VCardTitle
+      >
+      <VCardText>
+        <div class="grid gap-3">
+          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
+              Nome
+            </p>
+            <p class="mt-1 font-medium text-zinc-900">
+              {{ selectedUser?.name }}
+            </p>
+          </div>
+          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
+              E-mail
+            </p>
+            <p class="mt-1 font-medium text-zinc-900">
+              {{ selectedUser?.email }}
+            </p>
+          </div>
+          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">CPF</p>
+            <p class="mt-1 font-medium text-zinc-900">
+              {{ selectedUser?.cpf }}
+            </p>
+          </div>
+        </div>
+      </VCardText>
+      <VCardActions class="px-6 pb-5">
+        <VSpacer />
+        <VBtn variant="outlined" color="secondary" @click="isViewOpen = false"
+          >Fechar</VBtn
+        >
+      </VCardActions>
+    </VCard>
+  </VDialog>
 </template>

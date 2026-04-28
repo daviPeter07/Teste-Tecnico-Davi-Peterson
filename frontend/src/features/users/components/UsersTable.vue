@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Pencil, Trash2 } from "lucide-vue-next";
+import { Eye, Pencil, Trash2 } from "lucide-vue-next";
 import type { User } from "@/types/user";
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
+  view: [user: User];
   edit: [user: User];
   remove: [user: User];
 }>();
@@ -25,20 +26,60 @@ const emit = defineEmits<{
       </tr>
     </thead>
     <tbody>
-      <tr v-for="user in props.users" :key="user.id">
+      <tr
+        v-for="(user, index) in props.users"
+        :key="user.id"
+        :class="index % 2 === 0 ? 'bg-white' : 'bg-zinc-50/70'"
+      >
         <td class="font-medium text-zinc-900">{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.cpf }}</td>
         <td>
           <div class="flex justify-end gap-2">
-            <VBtn size="small" variant="outlined" color="secondary" @click="emit('edit', user)">
-              <Pencil :size="14" class="mr-1" />
-              Editar
-            </VBtn>
-            <VBtn size="small" variant="outlined" color="error" @click="emit('remove', user)">
-              <Trash2 :size="14" class="mr-1" />
-              Excluir
-            </VBtn>
+            <VTooltip text="Visualizar" location="top">
+              <template #activator="{ props: tooltipProps }">
+                <VBtn
+                  v-bind="tooltipProps"
+                  icon
+                  size="small"
+                  variant="text"
+                  class="text-emerald-600 hover:bg-emerald-50"
+                  @click="emit('view', user)"
+                >
+                  <Eye :size="18" />
+                </VBtn>
+              </template>
+            </VTooltip>
+
+            <VTooltip text="Editar" location="top">
+              <template #activator="{ props: tooltipProps }">
+                <VBtn
+                  v-bind="tooltipProps"
+                  icon
+                  size="small"
+                  variant="text"
+                  class="text-blue-600 hover:bg-blue-50"
+                  @click="emit('edit', user)"
+                >
+                  <Pencil :size="18" />
+                </VBtn>
+              </template>
+            </VTooltip>
+
+            <VTooltip text="Excluir" location="top">
+              <template #activator="{ props: tooltipProps }">
+                <VBtn
+                  v-bind="tooltipProps"
+                  icon
+                  size="small"
+                  variant="text"
+                  class="text-rose-600 hover:bg-rose-50"
+                  @click="emit('remove', user)"
+                >
+                  <Trash2 :size="18" />
+                </VBtn>
+              </template>
+            </VTooltip>
           </div>
         </td>
       </tr>
