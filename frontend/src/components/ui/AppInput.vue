@@ -7,6 +7,7 @@ type Props = {
   label?: string;
   type?: string;
   autocomplete?: string;
+  inputmode?: string;
   errorMessages?: string | string[];
   min?: string | number;
   step?: string | number;
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   label: "",
   type: "text",
   autocomplete: "off",
+  inputmode: undefined,
   errorMessages: "",
   min: undefined,
   step: undefined,
@@ -38,6 +40,7 @@ const emit = defineEmits<{
       :placeholder="props.placeholder"
       :type="props.type"
       :autocomplete="props.autocomplete"
+      :inputmode="props.inputmode"
       :error-messages="props.errorMessages"
       :min="props.min"
       :step="props.step"

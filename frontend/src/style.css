@@ -30,7 +30,11 @@ body {
 }
 
 .auth-input .v-field__input {
-  padding-left: 14px;
+  padding: 0 2px
+}
+
+.auth-input .v-field__input input {
+  padding: 0 0 0 12px;
 }
 
 .auth-input .v-field__input input::placeholder,
@@ -69,7 +73,11 @@ body {
 
 .auth-textarea .v-field__input {
   align-items: flex-start;
-  padding-top: 12px;
+  padding: 12px 14px
+}
+
+.auth-textarea .v-field__input textarea {
+  padding: 0 0 0 2px;
 }
 
 .auth-textarea textarea {

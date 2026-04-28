@@ -24,3 +24,14 @@ export const parseCurrency = (value: string) => {
 
   return Number.isNaN(parsed) ? 0 : parsed;
 };
+
+export const formatCurrencyInput = (value: unknown) => {
+  const digits = String(value ?? "").replace(/\D/g, "");
+  const normalizedDigits = digits || "0";
+  const cents = Number(normalizedDigits) / 100;
+
+  return new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(cents);
+};

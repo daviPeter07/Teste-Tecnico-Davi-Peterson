@@ -8,7 +8,7 @@ import AppTextarea from "@/components/ui/AppTextarea.vue";
 import { createProductSchema } from "@/schemas/products/product.schema";
 import type { CreateProductPayload, Product } from "@/types/product";
 import type { User } from "@/types/user";
-import { parseCurrency } from "@/utils/number";
+import { formatCurrencyInput } from "@/utils/number";
 
 type UserOption = {
   title: string;
@@ -54,12 +54,16 @@ const [price] = defineField("price");
 const userSearch = ref("");
 
 const priceInput = computed({
-  get: () =>
-    price.value === undefined || price.value === null
-      ? ""
-      : String(price.value),
+  get: () => formatCurrencyInput(price.value),
   set: (value: string) => {
-    price.value = parseCurrency(value);
+    const digits = String(value ?? "").replace(/\D/g, "");
+
+    if (!digits) {
+      price.value = 0;
+      return;
+    }
+
+    price.value = Number(digits) / 100;
   },
 });
 
@@ -99,13 +103,18 @@ defineExpose({ onSubmit, isEditMode });
         label="Preço"
         placeholder="Digite o preço do produto"
         prefix="R$"
+        inputmode="numeric"
         :error-messages="errors.price"
       />
     </div>
     <div class="md:col-span-2">
       <AppTextarea
         v-model="description"
-        :label="isEditMode ? 'Descrição do produto (opcional)' : 'Descrição do produto'"
+        :label="
+          isEditMode
+            ? 'Descrição do produto (opcional)'
+            : 'Descrição do produto'
+        "
         placeholder="Digite a descrição do produto"
         :error-messages="errors.description"
       />

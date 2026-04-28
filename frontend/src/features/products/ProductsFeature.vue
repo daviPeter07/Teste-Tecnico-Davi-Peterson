@@ -26,7 +26,7 @@ const products = ref<Product[]>([]);
 const users = ref<User[]>([]);
 const selectedSort = ref("recentes");
 
-const isLoading = ref(false);
+const isLoading = ref(true);
 const isFormLoading = ref(false);
 const isDeleteLoading = ref(false);
 const requestError = ref("");
