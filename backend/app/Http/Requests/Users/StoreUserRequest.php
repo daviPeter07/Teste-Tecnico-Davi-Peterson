@@ -11,11 +11,12 @@ class StoreUserRequest extends BaseFormRequest
     {
         return true;
     }
+
     public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'cpf' => ['required', 'string', 'max:11', 'unique:users,cpf', new ValidCpf()],
+            'cpf' => ['required', 'string', 'max:11', 'unique:users,cpf', new ValidCpf],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6'],
         ];

@@ -13,16 +13,16 @@ class UserService
         $perPage = $filters['per_page'] ?? 10;
 
         return User::query()
-            //se search tiver valor, aplica o filtro
+            // se search tiver valor, aplica o filtro
             ->when($search, function ($query) use ($search) {
-                //filtro para buscar por nome, email ou cpf para case-insensitive
+                // filtro para buscar por nome, email ou cpf para case-insensitive
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'ILIKE', "%{$search}%")
                         ->orWhere('email', 'ILIKE', "%{$search}%")
                         ->orWhere('cpf', 'ILIKE', "%{$search}%");
                 });
             })
-            //ordena do mais recente paginado
+            // ordena do mais recente paginado
             ->latest()
             ->paginate($perPage);
     }

@@ -15,12 +15,14 @@ class ValidCpf implements ValidationRule
         // Verifica se foi informado todos os digitos corretamente
         if (strlen($cpf) != 11) {
             $fail('O CPF informado é inválido.');
+
             return;
         }
 
         // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
         if (preg_match('/(\d)\1{10}/', $cpf)) {
             $fail('O CPF informado é inválido.');
+
             return;
         }
 
@@ -39,6 +41,7 @@ class ValidCpf implements ValidationRule
             // Valida se o dígito calculado bate com o dígito informado no CPF.
             if ($cpf[$c] != $d) {
                 $fail('O CPF informado é inválido.');
+
                 return;
             }
         }

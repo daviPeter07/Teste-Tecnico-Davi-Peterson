@@ -68,14 +68,14 @@ class AuthEndpointsTest extends TestCase
 
         $token = $loginResponse->json('token');
 
-        $meResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $meResponse = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/me');
 
         $meResponse->assertStatus(200)
             ->assertJsonPath('message', 'Usuário autenticado.')
             ->assertJsonPath('data.id', $user->id);
 
-        $logoutResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $logoutResponse = $this->withHeader('Authorization', 'Bearer '.$token)
             ->postJson('/api/logout');
 
         $logoutResponse->assertStatus(200)

@@ -24,7 +24,7 @@ class Product extends Model
         ];
     }
 
-    //associa com hasMany do user (1:N)
+    // associa com hasMany do user (1:N)
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

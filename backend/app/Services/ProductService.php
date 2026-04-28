@@ -15,7 +15,7 @@ class ProductService
 
         return Product::query()
             ->with('user')
-            ->when($userId, fn($query) => $query->where('user_id', $userId))
+            ->when($userId, fn ($query) => $query->where('user_id', $userId))
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'ILIKE', "%{$search}%")

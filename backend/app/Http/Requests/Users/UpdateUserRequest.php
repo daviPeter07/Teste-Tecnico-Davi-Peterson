@@ -18,7 +18,7 @@ class UpdateUserRequest extends BaseFormRequest
                 'sometimes',
                 'required',
                 'digits:11',
-                new ValidCpf(),
+                new ValidCpf,
                 Rule::unique('users', 'cpf')->ignore($userId),
             ],
             'email' => [
