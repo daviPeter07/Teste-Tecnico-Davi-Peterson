@@ -22,8 +22,41 @@ body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--color-black);
-  background:
-    radial-gradient(circle at 10% 10%, rgba(249, 115, 22, 0.12), transparent 35%),
-    radial-gradient(circle at 90% 90%, rgba(17, 17, 17, 0.06), transparent 30%),
-    var(--color-gray-soft);
+  background: var(--color-gray-soft);
+}
+
+.auth-input .v-field__outline {
+  opacity: 1;
+}
+
+.auth-input .v-field__input {
+  padding-left: 14px;
+}
+
+.auth-input .v-field {
+  border: 1px solid #a1a1aa;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.auth-input .v-field--variant-outlined .v-field__outline {
+  display: none;
+}
+
+.auth-input .v-field__outline__start,
+.auth-input .v-field__outline__notch,
+.auth-input .v-field__outline__end {
+  border-color: #a1a1aa;
+}
+
+.auth-input.v-input--focused .v-field__outline__start,
+.auth-input.v-input--focused .v-field__outline__notch,
+.auth-input.v-input--focused .v-field__outline__end {
+  border-color: var(--color-orange);
+  border-width: 2px;
+}
+
+.auth-input.v-input--focused .v-field {
+  border-color: var(--color-orange);
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.15);
 }
