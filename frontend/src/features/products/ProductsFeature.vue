@@ -224,16 +224,7 @@ watch([page, perPage, search, selectedUserId], async () => {
     </template>
 
     <template #pagination>
-      <div class="flex items-center justify-end gap-3 max-sm:flex-col max-sm:items-stretch">
-        <VSelect
-          v-model="perPage"
-          label="Por página"
-          density="compact"
-          variant="outlined"
-          color="deep-orange"
-          class="auth-input w-32 max-sm:w-full"
-          :items="[10, 15, 25, 50]"
-        />
+      <div class="flex items-center justify-end gap-3 max-sm:justify-center">
         <VPagination
           :length="totalPages"
           :model-value="page"

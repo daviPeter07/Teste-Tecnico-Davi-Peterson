@@ -23,6 +23,7 @@ const isLoading = ref(false);
 const isFormLoading = ref(false);
 const isDeleteLoading = ref(false);
 const requestError = ref("");
+const selectedStatus = ref("Todos");
 
 const selectedUser = ref<User | null>(null);
 const isFormOpen = ref(false);
@@ -43,7 +44,15 @@ const fetchUsers = async () => {
   requestError.value = "";
 
   try {
-    const response = await listUsersRequest(queryParams.value);
+    const params: Record<string, string | number> = {
+      ...queryParams.value,
+    };
+
+    if (selectedStatus.value !== "Todos") {
+      params.status = selectedStatus.value.toLowerCase();
+    }
+
+    const response = await listUsersRequest(params);
     users.value = response.data ?? [];
     totalPages.value = response.meta?.last_page ?? 1;
   } catch (error) {
@@ -136,8 +145,12 @@ onMounted(async () => {
   await fetchUsers();
 });
 
-watch([page, perPage, search], async () => {
+watch([page, perPage, search, selectedStatus], async () => {
   await fetchUsers();
+});
+
+watch(selectedStatus, () => {
+  setPage(1);
 });
 </script>
 
@@ -151,6 +164,18 @@ watch([page, perPage, search], async () => {
     @update:search-value="setSearch"
     @add="openCreateDialog"
   >
+    <template #filters>
+      <VSelect
+        v-model="selectedStatus"
+        label="Status"
+        variant="outlined"
+        density="comfortable"
+        color="deep-orange"
+        class="auth-input w-full lg:w-56"
+        :items="['Todos', 'Ativos', 'Inativos']"
+      />
+    </template>
+
     <template #content>
       <VAlert v-if="requestError" type="error" variant="tonal" class="mb-4">
         {{ requestError }}

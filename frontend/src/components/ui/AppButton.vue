@@ -27,10 +27,11 @@ const colorByVariant = {
 } as const;
 
 const classByVariant = {
-  primary: "!bg-orange-500 !text-white hover:!bg-orange-600",
-  secondary: "",
-  danger: "",
-  ghost: "",
+  primary:
+    "!rounded-xl !px-5 !py-2 !bg-orange-500 !text-white hover:!bg-orange-600",
+  secondary: "!rounded-xl !px-4 !py-2",
+  danger: "!rounded-xl !px-4 !py-2",
+  ghost: "!rounded-xl !px-3 !py-2",
 } as const;
 
 const vuetifyVariantByType = {
