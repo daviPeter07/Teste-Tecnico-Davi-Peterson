@@ -1,12 +1,32 @@
 <template>
-  <VCard rounded="xl" elevation="6" class="mx-auto w-full max-w-md">
-    <VCardTitle class="pt-6 text-h6">Criar conta</VCardTitle>
-    <VCardText>
-      <form class="space-y-4" @submit.prevent="onSubmit">
+  <VCard rounded="xl" elevation="8" class="auth-surface mx-auto w-full max-w-5xl overflow-hidden">
+    <VRow no-gutters>
+      <VCol cols="12" md="5" class="auth-accent text-white">
+        <div class="flex h-full flex-col justify-between p-8">
+          <div>
+            <div class="mb-8 text-sm font-medium text-slate-300">SYSTOCK</div>
+            <h2 class="mb-2 text-3xl font-semibold">Crie sua conta</h2>
+            <p class="text-sm text-slate-300">
+              Faça seu cadastro para acessar o painel e administrar seus dados.
+            </p>
+          </div>
+          <p class="text-xs text-slate-400">snips-login-forms-03 style</p>
+        </div>
+      </VCol>
+
+      <VCol cols="12" md="7">
+        <div class="p-8 md:p-10">
+          <h1 class="mb-1 text-3xl font-semibold text-slate-900">Cadastro</h1>
+          <p class="mb-6 text-sm text-slate-500">Preencha seus dados para criar a conta.</p>
+
+          <form class="space-y-4" @submit.prevent="onSubmit">
         <VTextField
           v-model="name"
           label="Nome"
           autocomplete="name"
+          variant="outlined"
+          density="comfortable"
+          color="deep-orange"
           :error-messages="errors.name"
           prepend-inner-icon="mdi-account-outline"
         />
@@ -15,6 +35,9 @@
           v-model="cpf"
           label="CPF"
           autocomplete="off"
+          variant="outlined"
+          density="comfortable"
+          color="deep-orange"
           :error-messages="errors.cpf"
           prepend-inner-icon="mdi-card-account-details-outline"
         />
@@ -24,6 +47,9 @@
           label="E-mail"
           type="email"
           autocomplete="email"
+          variant="outlined"
+          density="comfortable"
+          color="deep-orange"
           :error-messages="errors.email"
           prepend-inner-icon="mdi-email-outline"
         />
@@ -33,6 +59,9 @@
           label="Senha"
           type="password"
           autocomplete="new-password"
+          variant="outlined"
+          density="comfortable"
+          color="deep-orange"
           :error-messages="errors.password"
           prepend-inner-icon="mdi-lock-outline"
         />
@@ -46,18 +75,20 @@
           {{ requestError }}
         </VAlert>
 
-        <VBtn type="submit" block color="primary" :loading="isSubmitting">
+        <VBtn type="submit" block color="deep-orange" size="large" :loading="isSubmitting">
           Criar cadastro
         </VBtn>
       </form>
-    </VCardText>
 
-    <VDivider />
-    <VCardActions class="justify-center py-4">
-      <RouterLink class="text-sm text-blue-700" to="/login">
-        Já tem conta? Fazer login
-      </RouterLink>
-    </VCardActions>
+      <div class="mt-6 text-center">
+        <RouterLink class="auth-link text-sm" to="/login">
+          Já tem conta? Fazer login
+        </RouterLink>
+      </div>
+        </div>
+      </VCol>
+    </VRow>
+
   </VCard>
 </template>
 
@@ -84,7 +115,7 @@ const schema = toTypedSchema(
       .regex(/^\d{11}$/, "O CPF deve conter 11 números sem pontuação."),
     email: z.string().email("Informe um e-mail válido."),
     password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres."),
-  })
+  }),
 );
 
 const { errors, defineField, handleSubmit, isSubmitting } = useForm({
@@ -109,7 +140,10 @@ const onSubmit = handleSubmit(async (values) => {
     await authStore.register(values);
     await router.push({ name: "login" });
   } catch (error) {
-    requestError.value = getApiErrorMessage(error, "Não foi possível concluir o cadastro.");
+    requestError.value = getApiErrorMessage(
+      error,
+      "Não foi possível concluir o cadastro.",
+    );
   }
 });
 </script>

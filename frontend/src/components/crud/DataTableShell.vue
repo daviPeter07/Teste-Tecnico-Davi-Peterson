@@ -34,14 +34,14 @@
 
 <script setup lang="ts">
 defineProps<{
-  title: string
-  search: string
-  currentPage: number
-  lastPage: number
-}>()
+  title: string;
+  search: string;
+  currentPage: number;
+  lastPage: number;
+}>();
 
 const emit = defineEmits<{
-  (event: "update:search", value: string): void
-  (event: "update:page", value: number): void
-}>()
+  (event: "update:search", value: string): void;
+  (event: "update:page", value: number): void;
+}>();
 </script>
