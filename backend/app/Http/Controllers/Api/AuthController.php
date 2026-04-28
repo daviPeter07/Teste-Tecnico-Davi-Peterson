@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class AuthController extends Controller
             'message' => 'Login realizado com sucesso.',
             'token' => $token,
             'token_type' => 'Bearer',
-            'data' => $this->formatUser($user),
+            'data' => new UserResource($user),
         ]);
     }
 
@@ -59,19 +60,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Usuário autenticado.',
-            'data' => $this->formatUser($user),
+            'data' => new UserResource($user),
         ]);
-    }
-
-    private function formatUser(User $user): array
-    {
-        return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'cpf' => $user->cpf,
-            'email' => $user->email,
-            'created_at' => $user->created_at?->toISOString(),
-            'updated_at' => $user->updated_at?->toISOString(),
-        ];
     }
 }

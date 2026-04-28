@@ -27,12 +27,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Usuários listados com sucesso.',
             'data' => UserResource::collection($users),
-            'meta' => [
-                'current_page' => $users->currentPage(),
-                'last_page' => $users->lastPage(),
-                'per_page' => $users->perPage(),
-                'total' => $users->total(),
-            ],
+            'meta' => $this->paginationMeta($users),
         ]);
     }
 

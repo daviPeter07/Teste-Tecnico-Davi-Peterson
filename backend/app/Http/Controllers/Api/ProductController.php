@@ -29,12 +29,7 @@ class ProductController extends Controller
         return response()->json([
             'message' => 'Produtos listados com sucesso.',
             'data' => ProductResource::collection($products),
-            'meta' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-            ],
+            'meta' => $this->paginationMeta($products),
         ]);
     }
 
@@ -49,12 +44,7 @@ class ProductController extends Controller
         return response()->json([
             'message' => 'Produtos do usuário listados com sucesso.',
             'data' => ProductResource::collection($products),
-            'meta' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-            ],
+            'meta' => $this->paginationMeta($products),
         ]);
     }
 
