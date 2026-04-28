@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AppButton from "@/components/ui/AppButton.vue";
+
 type Props = {
   modelValue: boolean;
   title: string;
@@ -42,17 +44,16 @@ const onSave = () => emit("save");
 
       <VCardActions class="px-6 pb-6">
         <VSpacer />
-        <VBtn variant="outlined" color="secondary" @click="onClose">{{
+        <AppButton variant="secondary" @click="onClose">{{
           props.cancelLabel
-        }}</VBtn>
-        <VBtn
-          color="deep-orange"
-          class="!bg-orange-500 !text-white hover:!bg-orange-600"
+        }}</AppButton>
+        <AppButton
+          variant="primary"
           :loading="props.loading"
           @click="onSave"
         >
           {{ props.saveLabel }}
-        </VBtn>
+        </AppButton>
       </VCardActions>
     </VCard>
   </VDialog>

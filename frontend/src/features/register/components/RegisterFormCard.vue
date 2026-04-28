@@ -11,6 +11,9 @@ import {
   Mail,
   UserRound,
 } from "lucide-vue-next";
+import AppButton from "@/components/ui/AppButton.vue";
+import AppInput from "@/components/ui/AppInput.vue";
+import AppLabel from "@/components/ui/AppLabel.vue";
 import { useApiError } from "@/composables/useApiError";
 import { registerSchema } from "@/schemas/auth/register.schema";
 import { useAuthStore } from "@/stores/auth";
@@ -59,69 +62,41 @@ const onSubmit = handleSubmit(async (values) => {
       </aside>
 
       <form class="space-y-4 p-7 md:p-9" @submit.prevent="onSubmit">
-        <div class="mb-1 flex items-center gap-2 text-sm font-medium text-zinc-700">
-          <UserRound :size="15" class="text-zinc-500" />
-          <span>Nome</span>
-        </div>
-        <VTextField
+        <AppLabel text="Nome" :icon="UserRound" />
+        <AppInput
           v-model="name"
           aria-label="Nome"
           placeholder="Seu nome completo"
-          variant="outlined"
-          density="comfortable"
-          color="deep-orange"
           autocomplete="name"
-          class="auth-input"
           :error-messages="errors.name"
         />
 
-        <div class="mb-1 mt-1 flex items-center gap-2 text-sm font-medium text-zinc-700">
-          <Fingerprint :size="15" class="text-zinc-500" />
-          <span>CPF</span>
-        </div>
-        <VTextField
+        <AppLabel class="mt-1" text="CPF" :icon="Fingerprint" />
+        <AppInput
           v-model="cpf"
           aria-label="CPF"
           placeholder="Somente números"
-          variant="outlined"
-          density="comfortable"
-          color="deep-orange"
           autocomplete="off"
-          class="auth-input"
           :error-messages="errors.cpf"
         />
 
-        <div class="mb-1 mt-1 flex items-center gap-2 text-sm font-medium text-zinc-700">
-          <Mail :size="15" class="text-zinc-500" />
-          <span>E-mail</span>
-        </div>
-        <VTextField
+        <AppLabel class="mt-1" text="E-mail" :icon="Mail" />
+        <AppInput
           v-model="email"
           aria-label="E-mail"
           placeholder="voce@empresa.com"
           type="email"
-          variant="outlined"
-          density="comfortable"
-          color="deep-orange"
           autocomplete="email"
-          class="auth-input"
           :error-messages="errors.email"
         />
 
-        <div class="mb-1 mt-1 flex items-center gap-2 text-sm font-medium text-zinc-700">
-          <LockKeyhole :size="15" class="text-zinc-500" />
-          <span>Senha</span>
-        </div>
-        <VTextField
+        <AppLabel class="mt-1" text="Senha" :icon="LockKeyhole" />
+        <AppInput
           v-model="password"
           aria-label="Senha"
           :type="isPasswordVisible ? 'text' : 'password'"
           placeholder="Crie uma senha"
-          variant="outlined"
-          density="comfortable"
-          color="deep-orange"
           autocomplete="new-password"
-          class="auth-input"
           :error-messages="errors.password"
         >
           <template #append-inner>
@@ -134,22 +109,21 @@ const onSubmit = handleSubmit(async (values) => {
               <EyeOff v-else :size="17" />
             </button>
           </template>
-        </VTextField>
+        </AppInput>
 
         <VAlert v-if="requestError" type="error" variant="tonal" density="comfortable">
           {{ requestError }}
         </VAlert>
 
-        <VBtn
+        <AppButton
           type="submit"
-          block
           size="large"
-          color="deep-orange"
-          class="!bg-orange-500 !text-white hover:!bg-orange-600"
+          block
+          variant="primary"
           :loading="isSubmitting"
         >
           Criar cadastro
-        </VBtn>
+        </AppButton>
 
         <p class="text-center text-sm text-zinc-600">
           Já tem conta?

@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
+import AppInput from "@/components/ui/AppInput.vue";
 import { createProductSchema } from "@/schemas/products/product.schema";
 import type { CreateProductPayload, Product } from "@/types/product";
 import type { User } from "@/types/user";
@@ -68,23 +69,17 @@ defineExpose({ onSubmit, isEditMode });
       item-value="value"
       :error-messages="errors.user_id"
     />
-    <VTextField
+    <AppInput
       v-model="name"
-      label="Nome"
-      variant="outlined"
-      color="deep-orange"
-      class="auth-input"
+      placeholder="Nome"
       :error-messages="errors.name"
     />
-    <VTextField
+    <AppInput
       v-model.number="price"
-      label="Preço"
+      placeholder="Preço"
       type="number"
       min="0"
       step="0.01"
-      variant="outlined"
-      color="deep-orange"
-      class="auth-input"
       :error-messages="errors.price"
     />
     <VTextarea

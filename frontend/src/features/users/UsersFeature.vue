@@ -171,7 +171,7 @@ watch([page, perPage, search], async () => {
     </template>
 
     <template #pagination>
-      <div class="flex justify-end">
+      <div class="flex justify-end max-sm:justify-center">
         <VPagination
           :length="totalPages"
           :model-value="page"

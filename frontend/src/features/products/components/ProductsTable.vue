@@ -23,8 +23,9 @@ const formatCurrency = (value: number) => {
 </script>
 
 <template>
-  <VTable class="rounded-xl border border-zinc-200">
-    <thead>
+  <div class="overflow-x-auto rounded-xl border border-zinc-200">
+    <VTable class="min-w-[760px]">
+      <thead>
       <tr>
         <th class="text-left">Nome</th>
         <th class="text-left">Descrição</th>
@@ -90,6 +91,7 @@ const formatCurrency = (value: number) => {
           </div>
         </td>
       </tr>
-    </tbody>
-  </VTable>
+      </tbody>
+    </VTable>
+  </div>
 </template>

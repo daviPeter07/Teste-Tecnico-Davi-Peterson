@@ -16,8 +16,9 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <VTable class="rounded-xl border border-zinc-200">
-    <thead>
+  <div class="overflow-x-auto rounded-xl border border-zinc-200">
+    <VTable class="min-w-[700px]">
+      <thead>
       <tr>
         <th class="text-left">Nome</th>
         <th class="text-left">E-mail</th>
@@ -83,6 +84,7 @@ const emit = defineEmits<{
           </div>
         </td>
       </tr>
-    </tbody>
-  </VTable>
+      </tbody>
+    </VTable>
+  </div>
 </template>

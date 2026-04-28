@@ -2,6 +2,8 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { LogOut } from "lucide-vue-next";
+import { dashboardNavigation } from "@/constants/navigation";
+import AppButton from "@/components/ui/AppButton.vue";
 import AppSidebar from "@/components/layout/AppSidebar.vue";
 import { useAuthStore } from "@/stores/auth";
 
@@ -32,10 +34,22 @@ onMounted(async () => {
 
       <div class="flex min-h-screen flex-1 flex-col">
         <header
-          class="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-4"
+          class="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-4 md:px-6"
         >
           <div>
             <h2 class="text-lg font-semibold text-zinc-900">Dashboard</h2>
+          </div>
+
+          <div class="flex w-full gap-2 md:hidden">
+            <RouterLink
+              v-for="item in dashboardNavigation"
+              :key="item.to"
+              :to="item.to"
+              class="rounded-lg border border-zinc-300 px-3 py-2 text-xs font-medium text-zinc-700"
+              active-class="border-orange-500 text-orange-600"
+            >
+              {{ item.label }}
+            </RouterLink>
           </div>
 
           <div class="flex items-center gap-4">
@@ -48,16 +62,14 @@ onMounted(async () => {
               </p>
             </div>
 
-            <VBtn
-              variant="outlined"
-              color="deep-orange"
+            <AppButton
+              variant="secondary"
               size="small"
-              prepend-icon=""
               @click="onLogout"
             >
               <LogOut :size="16" class="mr-2" />
               Sair
-            </VBtn>
+            </AppButton>
           </div>
         </header>
 

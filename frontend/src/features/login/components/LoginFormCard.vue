@@ -4,6 +4,9 @@ import { useRouter } from "vue-router";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-vue-next";
+import AppButton from "@/components/ui/AppButton.vue";
+import AppInput from "@/components/ui/AppInput.vue";
+import AppLabel from "@/components/ui/AppLabel.vue";
 import { useApiError } from "@/composables/useApiError";
 import { loginSchema } from "@/schemas/auth/login.schema";
 import { useAuthStore } from "@/stores/auth";
@@ -60,42 +63,24 @@ const onSubmit = handleSubmit(async (values) => {
       </aside>
 
       <form class="space-y-4 p-7 md:p-9" @submit.prevent="onSubmit">
-        <div
-          class="mb-1 flex items-center gap-2 text-sm font-medium text-zinc-700"
-        >
-          <Mail :size="15" class="text-zinc-500" />
-          <span>E-mail</span>
-        </div>
-        <VTextField
+        <AppLabel text="E-mail" :icon="Mail" />
+        <AppInput
           v-model="email"
           aria-label="E-mail"
           placeholder="voce@empresa.com"
           type="email"
-          variant="outlined"
-          density="comfortable"
-          color="deep-orange"
           autocomplete="email"
-          class="auth-input"
           :error-messages="errors.email"
         />
 
-        <div
-          class="mb-1 mt-1 flex items-center gap-2 text-sm font-medium text-zinc-700"
-        >
-          <LockKeyhole :size="15" class="text-zinc-500" />
-          <span>Senha</span>
-        </div>
+        <AppLabel class="mt-1" text="Senha" :icon="LockKeyhole" />
 
-        <VTextField
+        <AppInput
           v-model="password"
           aria-label="Senha"
           :type="isPasswordVisible ? 'text' : 'password'"
           placeholder="Digite sua senha"
-          variant="outlined"
-          density="comfortable"
-          color="deep-orange"
           autocomplete="current-password"
-          class="auth-input"
           :error-messages="errors.password"
         >
           <template #append-inner>
@@ -108,7 +93,7 @@ const onSubmit = handleSubmit(async (values) => {
               <EyeOff v-else :size="17" />
             </button>
           </template>
-        </VTextField>
+        </AppInput>
 
         <VAlert
           v-if="requestError"
@@ -119,16 +104,15 @@ const onSubmit = handleSubmit(async (values) => {
           {{ requestError }}
         </VAlert>
 
-        <VBtn
+        <AppButton
           type="submit"
-          block
           size="large"
-          color="deep-orange"
-          class="!bg-orange-500 !text-white hover:!bg-orange-600"
+          block
+          variant="primary"
           :loading="isSubmitting"
         >
           Entrar
-        </VBtn>
+        </AppButton>
 
         <p class="text-center text-sm text-zinc-600">
           Não tem conta?

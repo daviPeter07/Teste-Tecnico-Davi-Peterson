@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { Plus, Search } from "lucide-vue-next";
+import AppButton from "@/components/ui/AppButton.vue";
+import AppInput from "@/components/ui/AppInput.vue";
 
 type Props = {
   title?: string;
@@ -23,7 +25,8 @@ const emit = defineEmits<{
   "update:searchValue": [value: string];
 }>();
 
-const onSearchInput = (value: string) => emit("update:searchValue", value);
+const onSearchInput = (value: unknown) =>
+  emit("update:searchValue", String(value ?? ""));
 const onAdd = () => emit("add");
 </script>
 
@@ -37,33 +40,26 @@ const onAdd = () => emit("add");
         <p class="mt-1 text-sm text-zinc-600">{{ props.subtitle }}</p>
       </div>
 
-      <VBtn
-        color="deep-orange"
-        class="!bg-orange-500 !text-white hover:!bg-orange-600"
-        :disabled="props.disableAdd"
-        @click="onAdd"
-      >
+      <AppButton variant="primary" :disabled="props.disableAdd" @click="onAdd">
         <Plus :size="16" class="mr-2" />
         {{ props.addLabel }}
-      </VBtn>
+      </AppButton>
     </header>
 
     <div class="mt-4 grid gap-3 lg:grid-cols-[1.4fr_1fr]">
-      <VTextField
+      <AppInput
         :model-value="props.searchValue"
-        variant="outlined"
-        density="comfortable"
-        color="deep-orange"
-        class="auth-input"
         :placeholder="props.searchPlaceholder"
         @update:model-value="onSearchInput($event ?? '')"
       >
         <template #prepend-inner>
           <Search :size="16" class="text-zinc-500" />
         </template>
-      </VTextField>
+      </AppInput>
 
-      <div class="flex items-center justify-end gap-2">
+      <div
+        class="flex items-center justify-end gap-2 max-lg:flex-col max-lg:items-stretch"
+      >
         <slot name="filters" />
       </div>
     </div>

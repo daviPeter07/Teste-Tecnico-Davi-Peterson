@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
+import AppInput from "@/components/ui/AppInput.vue";
 import { createUserSchema } from "@/schemas/users/user.schema";
 import type { CreateUserPayload, User } from "@/types/user";
 
@@ -43,16 +44,14 @@ defineExpose({ onSubmit, isEditMode });
 
 <template>
   <form class="grid gap-4 md:grid-cols-2" @submit.prevent="onSubmit">
-    <VTextField v-model="name" label="Nome" variant="outlined" color="deep-orange" class="auth-input" :error-messages="errors.name" />
-    <VTextField v-model="cpf" label="CPF" variant="outlined" color="deep-orange" class="auth-input" :error-messages="errors.cpf" />
-    <VTextField v-model="email" label="E-mail" variant="outlined" color="deep-orange" class="auth-input md:col-span-2" :error-messages="errors.email" />
-    <VTextField
+    <AppInput v-model="name" placeholder="Nome" :error-messages="errors.name" />
+    <AppInput v-model="cpf" placeholder="CPF" :error-messages="errors.cpf" />
+    <AppInput v-model="email" placeholder="E-mail" :error-messages="errors.email" class="md:col-span-2" />
+    <AppInput
       v-model="password"
-      :label="isEditMode ? 'Nova senha' : 'Senha'"
+      :placeholder="isEditMode ? 'Nova senha' : 'Senha'"
       type="password"
-      variant="outlined"
-      color="deep-orange"
-      class="auth-input md:col-span-2"
+      class="md:col-span-2"
       :error-messages="errors.password"
     />
   </form>
