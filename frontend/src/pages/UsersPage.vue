@@ -37,7 +37,9 @@ const openForm = () => {
     </template>
 
     <template #content>
-      <EmptyState description="Nenhum usuario carregado ainda. A integracao entra na proxima fase." />
+      <EmptyState
+        description="Nenhum usuario carregado ainda. A integracao entra na proxima fase."
+      />
     </template>
 
     <template #pagination>
@@ -55,9 +57,24 @@ const openForm = () => {
     @save="isFormOpen = false"
   >
     <div class="grid gap-4 md:grid-cols-2">
-      <VTextField label="Nome" variant="outlined" color="deep-orange" class="auth-input" />
-      <VTextField label="CPF" variant="outlined" color="deep-orange" class="auth-input" />
-      <VTextField label="E-mail" variant="outlined" color="deep-orange" class="auth-input md:col-span-2" />
+      <VTextField
+        label="Nome"
+        variant="outlined"
+        color="deep-orange"
+        class="auth-input"
+      />
+      <VTextField
+        label="CPF"
+        variant="outlined"
+        color="deep-orange"
+        class="auth-input"
+      />
+      <VTextField
+        label="E-mail"
+        variant="outlined"
+        color="deep-orange"
+        class="auth-input md:col-span-2"
+      />
     </div>
   </AppFormDialog>
 
