@@ -16,6 +16,8 @@ class UserFactory extends Factory
      */
     protected static ?string $password;
 
+    protected static array $generatedCpfs = [];
+
     /**
      * Define the model's default state.
      *
@@ -34,6 +36,17 @@ class UserFactory extends Factory
     }
 
     private function generateValidCpf(): string
+    {
+        do {
+            $cpf = $this->buildCpf();
+        } while (in_array($cpf, static::$generatedCpfs, true));
+
+        static::$generatedCpfs[] = $cpf;
+
+        return $cpf;
+    }
+
+    private function buildCpf(): string
     {
         $numbers = [];
 
@@ -58,15 +71,5 @@ class UserFactory extends Factory
         $numbers[] = $digit2;
 
         return implode('', $numbers);
-    }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'email_verified_at' => null,
-        ]);
     }
 }
