@@ -16,10 +16,10 @@ const openForm = () => {
 
 <template>
   <DataTableShell
-    title="Usuarios"
-    subtitle="Padrao visual compartilhado para CRUD de usuarios e produtos."
+    title="Usuários"
+    subtitle="Padrão visual compartilhado para CRUD de usuários e produtos."
     search-placeholder="Buscar por nome, e-mail ou CPF"
-    add-label="Novo usuario"
+    add-label="Novo usuário"
     :search-value="search"
     @update:search-value="search = $event"
     @add="openForm"
@@ -38,7 +38,7 @@ const openForm = () => {
 
     <template #content>
       <EmptyState
-        description="Nenhum usuario carregado ainda. A integracao entra na proxima fase."
+        description="Nenhum usuário carregado ainda. A integração entra na próxima fase."
       />
     </template>
 
@@ -51,8 +51,8 @@ const openForm = () => {
 
   <AppFormDialog
     :model-value="isFormOpen"
-    title="Novo usuario"
-    subtitle="Dialogo base reutilizavel para create e edit."
+    title="Novo usuário"
+    subtitle="Diálogo base reutilizável para create e edit."
     @update:model-value="isFormOpen = $event"
     @save="isFormOpen = false"
   >
@@ -80,8 +80,8 @@ const openForm = () => {
 
   <ConfirmDialog
     :model-value="isConfirmOpen"
-    title="Excluir usuario"
-    description="Essa acao nao pode ser desfeita."
+    title="Excluir usuário"
+    description="Essa ação não pode ser desfeita."
     @update:model-value="isConfirmOpen = $event"
     @confirm="isConfirmOpen = false"
   />

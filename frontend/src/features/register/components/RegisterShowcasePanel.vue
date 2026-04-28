@@ -21,18 +21,18 @@ import { BadgeCheck, UserRoundPlus } from "lucide-vue-next";
       </p>
       <h2 class="mt-6 text-3xl font-semibold leading-tight">
         Crie sua conta e
-        <span class="text-orange-400">comece rapido</span>
+        <span class="text-orange-400">comece rápido</span>
       </h2>
       <p class="mt-4 max-w-xs text-sm text-zinc-300">
-        Organize sua base de usuarios e produtos com um fluxo de cadastro
-        simples e validacao robusta.
+        Organize sua base de usuários e produtos com um fluxo de cadastro
+        simples e validação robusta.
       </p>
     </div>
 
     <div class="relative space-y-3">
       <div class="flex items-center gap-2 text-sm text-zinc-200">
         <UserRoundPlus :size="16" class="text-orange-400" />
-        Cadastro rapido
+        Cadastro rápido
       </div>
       <div class="flex items-center gap-2 text-sm text-zinc-200">
         <BadgeCheck :size="16" class="text-orange-400" />

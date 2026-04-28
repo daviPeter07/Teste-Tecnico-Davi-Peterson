@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { LogOut } from "lucide-vue-next";
 import AppSidebar from "@/components/layout/AppSidebar.vue";
@@ -11,11 +12,22 @@ const onLogout = async () => {
   await authStore.logout();
   await router.push({ name: "login" });
 };
+
+onMounted(async () => {
+  if (authStore.token && !authStore.user) {
+    try {
+      await authStore.fetchMe();
+    } catch {
+      authStore.clearSession();
+      await router.push({ name: "login" });
+    }
+  }
+});
 </script>
 
 <template>
   <div class="min-h-screen bg-zinc-100">
-    <div class="mx-auto flex min-h-screen w-full max-w-[1500px]">
+    <div class="flex min-h-screen w-full">
       <AppSidebar />
 
       <div class="flex min-h-screen flex-1 flex-col">
@@ -24,7 +36,7 @@ const onLogout = async () => {
         >
           <div>
             <p class="text-sm text-zinc-500">Painel administrativo</p>
-            <h2 class="text-lg font-semibold text-zinc-900">Systock</h2>
+            <h2 class="text-lg font-semibold text-zinc-900">SYSTOCK</h2>
           </div>
 
           <div class="flex items-center gap-4">
@@ -33,7 +45,7 @@ const onLogout = async () => {
                 {{ authStore.user?.name ?? "Visitante" }}
               </p>
               <p class="text-xs text-zinc-500">
-                {{ authStore.user?.email ?? "Sem sessao" }}
+                {{ authStore.user?.email ?? "Sem sessão" }}
               </p>
             </div>
 

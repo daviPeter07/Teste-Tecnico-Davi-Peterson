@@ -21,11 +21,11 @@ import { ShieldCheck, Sparkles } from "lucide-vue-next";
       </p>
       <h2 class="mt-6 text-3xl font-semibold leading-tight">
         Controle total
-        <span class="text-orange-400">da sua operacao</span>
+        <span class="text-orange-400">da sua operação</span>
       </h2>
       <p class="mt-4 max-w-xs text-sm text-zinc-300">
-        Entre para gerenciar usuarios, produtos e acompanhar seu fluxo de
-        cadastro em um unico painel.
+        Entre para gerenciar usuários, produtos e acompanhar seu fluxo de
+        cadastro em um único painel.
       </p>
     </div>
 

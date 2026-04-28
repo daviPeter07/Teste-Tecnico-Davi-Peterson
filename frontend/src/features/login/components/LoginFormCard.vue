@@ -36,7 +36,7 @@ const onSubmit = handleSubmit(async (values) => {
   } catch (error) {
     requestError.value = getApiErrorMessage(
       error,
-      "Nao foi possivel realizar login.",
+      "Não foi possível realizar login.",
     );
   }
 });
@@ -55,7 +55,7 @@ const onSubmit = handleSubmit(async (values) => {
         </p>
         <h1 class="mt-3 text-3xl font-bold">Bem-vindo de volta</h1>
         <p class="mt-3 text-sm text-zinc-300">
-          Gerencie aqui seus usuarios e produtos.
+          Gerencie aqui seus usuários e produtos.
         </p>
       </aside>
 
@@ -131,7 +131,7 @@ const onSubmit = handleSubmit(async (values) => {
         </VBtn>
 
         <p class="text-center text-sm text-zinc-600">
-          Nao tem conta?
+          Não tem conta?
           <RouterLink
             class="font-medium text-orange-600 hover:text-orange-700"
             to="/register"

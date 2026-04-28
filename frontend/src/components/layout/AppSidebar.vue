@@ -4,13 +4,15 @@ import { dashboardNavigation } from "@/constants/navigation";
 
 <template>
   <aside
-    class="flex h-full w-72 flex-col border-r border-zinc-800 bg-zinc-950 px-4 py-6 text-white"
+    class="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r border-zinc-800 bg-zinc-950 px-4 py-6 text-white md:flex"
   >
     <div class="mb-8 px-2">
-      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
+      <h1 class="text-3xl font-black tracking-tight text-orange-500">
         SYSTOCK
+      </h1>
+      <p class="mt-2 text-xs uppercase tracking-[0.2em] text-zinc-400">
+        Painel administrativo
       </p>
-      <h1 class="mt-3 text-2xl font-bold text-orange-500">Dashboard</h1>
     </div>
 
     <nav class="flex flex-1 flex-col gap-2">

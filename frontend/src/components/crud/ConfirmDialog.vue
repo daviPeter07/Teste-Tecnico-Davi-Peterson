@@ -9,7 +9,7 @@ type Props = {
 };
 
 const props = withDefaults(defineProps<Props>(), {
-  title: "Confirmar acao",
+  title: "Confirmar ação",
   description: "Tem certeza que deseja continuar?",
   confirmLabel: "Confirmar",
   cancelLabel: "Cancelar",

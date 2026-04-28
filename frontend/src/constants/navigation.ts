@@ -3,7 +3,7 @@ import type { NavigationItem } from "@/types/navigation";
 
 export const dashboardNavigation: NavigationItem[] = [
   {
-    label: "Usuarios",
+    label: "Usuários",
     to: "/dashboard/users",
     icon: Users,
   },

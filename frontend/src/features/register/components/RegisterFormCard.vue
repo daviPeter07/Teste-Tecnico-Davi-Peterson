@@ -44,7 +44,7 @@ const onSubmit = handleSubmit(async (values) => {
     await authStore.register(values);
     await router.push({ name: "login" });
   } catch (error) {
-    requestError.value = getApiErrorMessage(error, "Nao foi possivel concluir o cadastro.");
+    requestError.value = getApiErrorMessage(error, "Não foi possível concluir o cadastro.");
   }
 });
 </script>
@@ -55,7 +55,7 @@ const onSubmit = handleSubmit(async (values) => {
       <aside class="bg-zinc-950 p-7 text-white md:p-9">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-400">Cadastro</p>
         <h1 class="mt-3 text-3xl font-bold">Crie sua conta</h1>
-        <p class="mt-3 text-sm text-zinc-300">Gerencie aqui seus usuarios e produtos.</p>
+        <p class="mt-3 text-sm text-zinc-300">Gerencie aqui seus usuários e produtos.</p>
       </aside>
 
       <form class="space-y-4 p-7 md:p-9" @submit.prevent="onSubmit">
@@ -82,7 +82,7 @@ const onSubmit = handleSubmit(async (values) => {
         <VTextField
           v-model="cpf"
           aria-label="CPF"
-          placeholder="Somente numeros"
+          placeholder="Somente números"
           variant="outlined"
           density="comfortable"
           color="deep-orange"
@@ -152,7 +152,7 @@ const onSubmit = handleSubmit(async (values) => {
         </VBtn>
 
         <p class="text-center text-sm text-zinc-600">
-          Ja tem conta?
+          Já tem conta?
           <RouterLink class="font-medium text-orange-600 hover:text-orange-700" to="/login">
             Fazer login
           </RouterLink>
