@@ -1,10 +1,9 @@
 <template>
-  <AuthPlaceholder
-    title="Login"
-    subtitle="Fase 1 concluida: roteamento, store e shell configurados."
-  />
+  <div class="flex min-h-screen items-center justify-center bg-slate-100 p-6">
+    <LoginForm />
+  </div>
 </template>
 
 <script setup lang="ts">
-import AuthPlaceholder from "../features/auth/AuthPlaceholder.vue";
+import LoginForm from "../features/auth/LoginForm.vue";
 </script>

@@ -1,9 +1,22 @@
 <template>
-  <VCard rounded="xl" elevation="2">
-    <VCardTitle class="text-h6">Produtos</VCardTitle>
-    <VCardText>
-      Estrutura base pronta. CRUD com pesquisa, filtro e paginacao sera
-      implementado na proxima fase.
-    </VCardText>
-  </VCard>
+  <DataTableShell
+    title="Produtos"
+    :search="search"
+    :current-page="page"
+    :last-page="1"
+    @update:search="search = $event"
+    @update:page="page = $event"
+  >
+    <VAlert type="info" variant="tonal">
+      Base reutilizável pronta. Próxima fase implementa CRUD completo de produtos.
+    </VAlert>
+  </DataTableShell>
 </template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import DataTableShell from "../components/crud/DataTableShell.vue";
+
+const search = ref("");
+const page = ref(1);
+</script>

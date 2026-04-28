@@ -1,10 +1,9 @@
 <template>
-  <AuthPlaceholder
-    title="Cadastro"
-    subtitle="Fase 1 concluida: proxima fase implementa formularios reais."
-  />
+  <div class="flex min-h-screen items-center justify-center bg-slate-100 p-6">
+    <RegisterForm />
+  </div>
 </template>
 
 <script setup lang="ts">
-import AuthPlaceholder from "../features/auth/AuthPlaceholder.vue";
+import RegisterForm from "../features/auth/RegisterForm.vue";
 </script>

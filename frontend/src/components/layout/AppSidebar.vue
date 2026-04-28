@@ -5,10 +5,13 @@
         v-for="item in items"
         :key="item.to"
         :to="item.to"
-        :prepend-icon="item.icon"
         :title="item.label"
         rounded="lg"
-      />
+      >
+        <template #prepend>
+          <component :is="item.icon" class="h-4 w-4" />
+        </template>
+      </VListItem>
     </VList>
   </VNavigationDrawer>
 </template>
