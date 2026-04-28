@@ -43,7 +43,7 @@ herd php artisan migrate --seed
 ## Rodando a API
 
 ```bash
-herd php artisan serve --no-reload
+composer run dev
 ```
 
 Base URL local (padrão): `http://127.0.0.1:8000`
@@ -88,22 +88,22 @@ Ao rodar `migrate --seed`, são criados:
 - usuários fake com `name`, `cpf`, `email`, `password`
 - produtos fake vinculados aos usuários (`user_id`, `name`, `price`, `description`)
 
-## Qualidade
+# Comandos
 
 Executar testes:
 
 ```bash
-herd php artisan test
+composer run test
 ```
 
 Verificar padrão de código:
 
 ```bash
-herd php vendor/bin/pint --test
+composer run lint
 ```
 
 Aplicar formatação automática:
 
 ```bash
-herd php vendor/bin/pint
+composer run format
 ```
