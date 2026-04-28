@@ -8,9 +8,16 @@ export type Product = {
   updated_at?: string;
 };
 
-export type ProductPayload = {
+export type CreateProductPayload = {
   user_id: number;
   name: string;
   description?: string;
   price: number;
+};
+
+export type UpdateProductPayload = {
+  user_id?: number;
+  name?: string;
+  description?: string;
+  price?: number;
 };
