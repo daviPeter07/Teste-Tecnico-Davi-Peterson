@@ -178,8 +178,7 @@ const onSearchChange = (value: string) => {
 };
 
 onMounted(async () => {
-  await fetchUsers();
-  await fetchProducts();
+  await Promise.all([fetchUsers(), fetchProducts()]);
 });
 
 watch([page, perPage, debouncedSearch, selectedSort], async () => {
@@ -351,7 +350,7 @@ watch(selectedSort, () => {
           Descrição
         </p>
         <p
-          class="mx-auto mt-3 max-w-3xl text-center text-sm leading-6 text-zinc-900 whitespace-pre-line"
+          class="mt-3 max-w-3xl text-sm leading-6 text-zinc-900 whitespace-pre-line"
         >
           {{ selectedProduct?.description || "-" }}
         </p>

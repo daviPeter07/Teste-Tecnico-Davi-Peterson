@@ -2,13 +2,13 @@
 import { computed, ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-import AppLabel from "@/components/ui/AppLabel.vue";
+import AppAutocomplete from "@/components/ui/AppAutocomplete.vue";
 import AppInput from "@/components/ui/AppInput.vue";
 import AppTextarea from "@/components/ui/AppTextarea.vue";
 import { createProductSchema } from "@/schemas/products/product.schema";
 import type { CreateProductPayload, Product } from "@/types/product";
 import type { User } from "@/types/user";
-import { formatCurrency, parseCurrency } from "@/utils/number";
+import { parseCurrency } from "@/utils/number";
 
 type UserOption = {
   title: string;
@@ -53,11 +53,11 @@ const [description] = defineField("description");
 const [price] = defineField("price");
 const userSearch = ref("");
 
-const formattedPrice = computed({
+const priceInput = computed({
   get: () =>
     price.value === undefined || price.value === null
       ? ""
-      : formatCurrency(Number(price.value)),
+      : String(price.value),
   set: (value: string) => {
     price.value = parseCurrency(value);
   },
@@ -73,14 +73,11 @@ defineExpose({ onSubmit, isEditMode });
 <template>
   <form class="grid gap-4 md:grid-cols-2" @submit.prevent="onSubmit">
     <div class="md:col-span-2">
-      <AppLabel text="Usuário" />
-      <VAutocomplete
+      <AppAutocomplete
         v-model="userId"
         v-model:search="userSearch"
+        label="Usuário"
         placeholder="Pesquise ou selecione um usuário"
-        variant="outlined"
-        color="deep-orange"
-        class="auth-input"
         :items="userOptions"
         item-title="title"
         item-value="value"
@@ -89,18 +86,18 @@ defineExpose({ onSubmit, isEditMode });
       />
     </div>
     <div>
-      <AppLabel text="Nome do produto" />
       <AppInput
         v-model="name"
+        label="Nome do produto"
         placeholder="Digite o nome do produto"
         :error-messages="errors.name"
       />
     </div>
     <div>
-      <AppLabel text="Preço" />
       <AppInput
-        v-model="formattedPrice"
-        placeholder="0,00"
+        v-model="priceInput"
+        label="Preço"
+        placeholder="Digite o preço do produto"
         prefix="R$"
         :error-messages="errors.price"
       />
@@ -108,11 +105,7 @@ defineExpose({ onSubmit, isEditMode });
     <div class="md:col-span-2">
       <AppTextarea
         v-model="description"
-        :label="
-          isEditMode
-            ? 'Descrição do produto (opcional)'
-            : 'Descrição do produto'
-        "
+        :label="isEditMode ? 'Descrição do produto (opcional)' : 'Descrição do produto'"
         placeholder="Digite a descrição do produto"
         :error-messages="errors.description"
       />
