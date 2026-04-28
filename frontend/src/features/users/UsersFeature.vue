@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
+import AppDetailDialog from "@/components/crud/AppDetailDialog.vue";
 import AppFormDialog from "@/components/crud/AppFormDialog.vue";
 import ConfirmDialog from "@/components/crud/ConfirmDialog.vue";
 import DataTableShell from "@/components/crud/DataTableShell.vue";
@@ -18,6 +19,7 @@ import {
 import type { UpdateUserSchemaOutput } from "@/schemas/users/user.schema";
 import type { CreateUserPayload, User } from "@/types/user";
 import { formatCpf } from "@/utils/cpf";
+import { formatDateTime } from "@/utils/date";
 
 const users = ref<User[]>([]);
 const totalPages = ref(1);
@@ -34,10 +36,17 @@ const isViewOpen = ref(false);
 const userFormRef = ref<InstanceType<typeof UserForm> | null>(null);
 
 const { getApiErrorMessage } = useApiError();
-const { page, perPage, search, queryParams, setPage, setSearch } =
-  usePaginatedTable({
-    initialPerPage: 10,
-  });
+const {
+  page,
+  perPage,
+  search,
+  debouncedSearch,
+  queryParams,
+  setPage,
+  setSearch,
+} = usePaginatedTable({
+  initialPerPage: 10,
+});
 
 const isEditMode = computed(() => Boolean(selectedUser.value));
 
@@ -157,7 +166,7 @@ onMounted(async () => {
   await fetchUsers();
 });
 
-watch([page, perPage, search, selectedSort], async () => {
+watch([page, perPage, debouncedSearch, selectedSort], async () => {
   await fetchUsers();
 });
 
@@ -250,47 +259,64 @@ watch(selectedSort, () => {
     @confirm="confirmDelete"
   />
 
-  <VDialog
+  <AppDetailDialog
     :model-value="isViewOpen"
-    max-width="560"
+    title="Detalhes do usuário"
+    subtitle="Dados cadastrais, auditoria e vínculo com produtos."
+    :max-width="760"
     @update:model-value="isViewOpen = $event"
   >
-    <VCard class="rounded-2xl border border-zinc-200">
-      <VCardTitle class="text-lg font-semibold text-zinc-900"
-        >Detalhes do usuário</VCardTitle
-      >
-      <VCardText>
-        <div class="grid gap-3">
-          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
-              Nome
-            </p>
-            <p class="mt-1 font-medium text-zinc-900">
-              {{ selectedUser?.name }}
-            </p>
-          </div>
-          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
-              E-mail
-            </p>
-            <p class="mt-1 font-medium text-zinc-900">
-              {{ selectedUser?.email }}
-            </p>
-          </div>
-          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">CPF</p>
-            <p class="mt-1 font-medium text-zinc-900">
-              {{ selectedUser?.cpf ? formatCpf(selectedUser.cpf) : "-" }}
-            </p>
-          </div>
-        </div>
-      </VCardText>
-      <VCardActions class="px-6 pb-5">
-        <VSpacer />
-        <VBtn variant="outlined" color="secondary" @click="isViewOpen = false"
-          >Fechar</VBtn
+    <div class="grid gap-3 md:grid-cols-2">
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">ID</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">{{ selectedUser?.id }}</p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">Produtos vinculados</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ selectedUser?.products?.length ?? 0 }}
+        </p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">Nome</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">{{ selectedUser?.name }}</p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">E-mail</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">{{ selectedUser?.email }}</p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">CPF</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ selectedUser?.cpf ? formatCpf(selectedUser.cpf) : "-" }}
+        </p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">Criado em</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ selectedUser?.created_at ? formatDateTime(selectedUser.created_at) : "-" }}
+        </p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 md:col-span-2">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">Atualizado em</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ selectedUser?.updated_at ? formatDateTime(selectedUser.updated_at) : "-" }}
+        </p>
+      </div>
+    </div>
+
+    <div v-if="selectedUser?.products?.length" class="mt-5 rounded-2xl border border-zinc-200 bg-white p-4">
+      <p class="text-sm font-semibold text-zinc-900">Produtos deste usuário</p>
+      <ul class="mt-3 space-y-2">
+        <li
+          v-for="product in selectedUser.products"
+          :key="product.id"
+          class="flex items-center justify-between rounded-xl bg-zinc-50 px-3 py-2 text-sm text-zinc-700"
         >
-      </VCardActions>
-    </VCard>
-  </VDialog>
+          <span class="font-medium text-zinc-900">{{ product.name }}</span>
+          <span class="text-zinc-500">#{{ product.id }}</span>
+        </li>
+      </ul>
+    </div>
+  </AppDetailDialog>
 </template>

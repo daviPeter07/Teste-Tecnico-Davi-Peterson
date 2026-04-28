@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed, onScopeDispose, ref } from "vue";
 import { paginationPerPageOptions } from "@/constants/table";
 import type { UsePaginatedTableOptions } from "@/types/table";
 
@@ -8,7 +8,26 @@ export function usePaginatedTable(options: UsePaginatedTableOptions = {}) {
     options.initialPerPage ?? paginationPerPageOptions[0],
   );
   const search = ref(options.initialSearch ?? "");
+  const debouncedSearch = ref(options.initialSearch ?? "");
   const filter = ref<string | number | null>(options.initialFilter ?? null);
+
+  let searchTimeout: ReturnType<typeof setTimeout> | undefined;
+
+  const syncDebouncedSearch = (nextSearch: string) => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    searchTimeout = setTimeout(() => {
+      debouncedSearch.value = nextSearch;
+    }, 350);
+  };
+
+  onScopeDispose(() => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+  });
 
   const queryParams = computed(() => {
     const params: Record<string, string | number> = {
@@ -16,8 +35,8 @@ export function usePaginatedTable(options: UsePaginatedTableOptions = {}) {
       per_page: perPage.value,
     };
 
-    if (search.value.trim()) {
-      params.search = search.value.trim();
+    if (debouncedSearch.value.trim()) {
+      params.search = debouncedSearch.value.trim();
     }
 
     if (filter.value !== null && filter.value !== "") {
@@ -39,6 +58,7 @@ export function usePaginatedTable(options: UsePaginatedTableOptions = {}) {
   const setSearch = (nextSearch: string) => {
     search.value = nextSearch;
     page.value = 1;
+    syncDebouncedSearch(nextSearch);
   };
 
   const setFilter = (nextFilter: string | number | null) => {
@@ -57,6 +77,7 @@ export function usePaginatedTable(options: UsePaginatedTableOptions = {}) {
     page,
     perPage,
     search,
+    debouncedSearch,
     filter,
     queryParams,
     setPage,

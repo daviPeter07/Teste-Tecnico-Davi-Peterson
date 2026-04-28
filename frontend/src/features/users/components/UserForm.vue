@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
+import AppLabel from "@/components/ui/AppLabel.vue";
 import AppInput from "@/components/ui/AppInput.vue";
 import {
   createUserSchema,
@@ -59,24 +60,38 @@ defineExpose({ onSubmit, isEditMode });
 
 <template>
   <form class="grid gap-4 md:grid-cols-2" @submit.prevent="onSubmit">
-    <AppInput v-model="name" placeholder="Nome" :error-messages="errors.name" />
-    <AppInput
-      v-model="cpfMasked"
-      placeholder="000.000.000-00"
-      :error-messages="errors.cpf"
-    />
-    <AppInput
-      v-model="email"
-      placeholder="E-mail"
-      :error-messages="errors.email"
-      class="md:col-span-2"
-    />
-    <AppInput
-      v-model="password"
-      :placeholder="isEditMode ? 'Nova senha' : 'Senha'"
-      type="password"
-      class="md:col-span-2"
-      :error-messages="errors.password"
-    />
+    <div class="md:col-span-2">
+      <AppLabel text="Nome" />
+      <AppInput
+        v-model="name"
+        placeholder="Digite o nome do usuário"
+        :error-messages="errors.name"
+      />
+    </div>
+    <div>
+      <AppLabel text="CPF" />
+      <AppInput
+        v-model="cpfMasked"
+        placeholder="000.000.000-00"
+        :error-messages="errors.cpf"
+      />
+    </div>
+    <div>
+      <AppLabel text="E-mail" />
+      <AppInput
+        v-model="email"
+        placeholder="voce@empresa.com"
+        :error-messages="errors.email"
+      />
+    </div>
+    <div class="md:col-span-2">
+      <AppLabel :text="isEditMode ? 'Nova senha' : 'Senha'" />
+      <AppInput
+        v-model="password"
+        :placeholder="isEditMode ? 'Digite a nova senha' : 'Digite sua senha'"
+        type="password"
+        :error-messages="errors.password"
+      />
+    </div>
   </form>
 </template>

@@ -6,6 +6,11 @@ export type Product = {
   price: number;
   created_at?: string;
   updated_at?: string;
+  user?: {
+    id: number;
+    name: string;
+    email: string;
+  };
 };
 
 export type CreateProductPayload = {

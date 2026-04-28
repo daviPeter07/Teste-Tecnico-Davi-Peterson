@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
+import AppLabel from "@/components/ui/AppLabel.vue";
 import AppInput from "@/components/ui/AppInput.vue";
+import AppTextarea from "@/components/ui/AppTextarea.vue";
 import { createProductSchema } from "@/schemas/products/product.schema";
 import type { CreateProductPayload, Product } from "@/types/product";
 import type { User } from "@/types/user";
+import { formatCurrency, parseCurrency } from "@/utils/number";
 
 type UserOption = {
   title: string;
@@ -48,6 +51,17 @@ const [userId] = defineField("user_id");
 const [name] = defineField("name");
 const [description] = defineField("description");
 const [price] = defineField("price");
+const userSearch = ref("");
+
+const formattedPrice = computed({
+  get: () =>
+    price.value === undefined || price.value === null
+      ? ""
+      : formatCurrency(Number(price.value)),
+  set: (value: string) => {
+    price.value = parseCurrency(value);
+  },
+});
 
 const onSubmit = handleSubmit((values) => {
   emit("submit", values);
@@ -58,38 +72,50 @@ defineExpose({ onSubmit, isEditMode });
 
 <template>
   <form class="grid gap-4 md:grid-cols-2" @submit.prevent="onSubmit">
-    <VSelect
-      v-model="userId"
-      label="Usuário"
-      variant="outlined"
-      color="deep-orange"
-      class="auth-input"
-      :items="userOptions"
-      item-title="title"
-      item-value="value"
-      :error-messages="errors.user_id"
-    />
-    <AppInput
-      v-model="name"
-      placeholder="Nome"
-      :error-messages="errors.name"
-    />
-    <AppInput
-      v-model.number="price"
-      placeholder="Preço"
-      type="number"
-      min="0"
-      step="0.01"
-      :error-messages="errors.price"
-    />
-    <VTextarea
-      v-model="description"
-      :label="isEditMode ? 'Descrição (opcional)' : 'Descrição'"
-      rows="3"
-      variant="outlined"
-      color="deep-orange"
-      class="auth-input md:col-span-2"
-      :error-messages="errors.description"
-    />
+    <div class="md:col-span-2">
+      <AppLabel text="Usuário" />
+      <VAutocomplete
+        v-model="userId"
+        v-model:search="userSearch"
+        placeholder="Pesquise ou selecione um usuário"
+        variant="outlined"
+        color="deep-orange"
+        class="auth-input"
+        :items="userOptions"
+        item-title="title"
+        item-value="value"
+        hide-no-data
+        :error-messages="errors.user_id"
+      />
+    </div>
+    <div>
+      <AppLabel text="Nome do produto" />
+      <AppInput
+        v-model="name"
+        placeholder="Digite o nome do produto"
+        :error-messages="errors.name"
+      />
+    </div>
+    <div>
+      <AppLabel text="Preço" />
+      <AppInput
+        v-model="formattedPrice"
+        placeholder="0,00"
+        prefix="R$"
+        :error-messages="errors.price"
+      />
+    </div>
+    <div class="md:col-span-2">
+      <AppTextarea
+        v-model="description"
+        :label="
+          isEditMode
+            ? 'Descrição do produto (opcional)'
+            : 'Descrição do produto'
+        "
+        placeholder="Digite a descrição do produto"
+        :error-messages="errors.description"
+      />
+    </div>
   </form>
 </template>

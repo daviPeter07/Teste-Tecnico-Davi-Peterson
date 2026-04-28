@@ -1,3 +1,5 @@
+import type { Product } from "@/types/product";
+
 export type User = {
   id: number;
   name: string;
@@ -5,6 +7,7 @@ export type User = {
   cpf: string;
   created_at?: string;
   updated_at?: string;
+  products?: Product[];
 };
 
 export type CreateUserPayload = {

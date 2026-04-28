@@ -3,26 +3,18 @@ import AppLabel from "@/components/ui/AppLabel.vue";
 
 type Props = {
   modelValue?: unknown;
-  placeholder?: string;
   label?: string;
-  type?: string;
-  autocomplete?: string;
+  placeholder?: string;
+  rows?: string | number;
   errorMessages?: string | string[];
-  min?: string | number;
-  step?: string | number;
-  prefix?: string;
 };
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: undefined,
-  placeholder: "",
   label: "",
-  type: "text",
-  autocomplete: "off",
+  placeholder: "",
+  rows: 4,
   errorMessages: "",
-  min: undefined,
-  step: undefined,
-  prefix: "",
 });
 
 const emit = defineEmits<{
@@ -33,27 +25,17 @@ const emit = defineEmits<{
 <template>
   <div>
     <AppLabel v-if="props.label" :text="props.label" class="mb-2" />
-    <VTextField
+    <VTextarea
       :model-value="props.modelValue"
       :placeholder="props.placeholder"
-      :type="props.type"
-      :autocomplete="props.autocomplete"
+      :rows="props.rows"
       :error-messages="props.errorMessages"
-      :min="props.min"
-      :step="props.step"
-      :prefix="props.prefix"
       variant="outlined"
       density="comfortable"
       color="deep-orange"
-      class="auth-input"
+      class="auth-textarea"
+      auto-grow
       @update:model-value="emit('update:modelValue', $event)"
-    >
-      <template #append-inner>
-        <slot name="append-inner" />
-      </template>
-      <template #prepend-inner>
-        <slot name="prepend-inner" />
-      </template>
-    </VTextField>
+    />
   </div>
 </template>

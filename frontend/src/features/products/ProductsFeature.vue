@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
+import AppDetailDialog from "@/components/crud/AppDetailDialog.vue";
 import AppFormDialog from "@/components/crud/AppFormDialog.vue";
 import ConfirmDialog from "@/components/crud/ConfirmDialog.vue";
 import DataTableShell from "@/components/crud/DataTableShell.vue";
@@ -18,13 +19,11 @@ import { listUsersRequest } from "@/services/users";
 import type { CreateProductPayload, Product } from "@/types/product";
 import type { User } from "@/types/user";
 import { formatCurrency } from "@/utils/number";
+import { formatDateTime } from "@/utils/date";
+import { usePaginatedTable } from "@/composables/usePaginatedTable";
 
 const products = ref<Product[]>([]);
 const users = ref<User[]>([]);
-const totalPages = ref(1);
-const page = ref(1);
-const perPage = ref(10);
-const search = ref("");
 const selectedSort = ref("recentes");
 
 const isLoading = ref(false);
@@ -39,6 +38,19 @@ const isViewOpen = ref(false);
 const productFormRef = ref<InstanceType<typeof ProductForm> | null>(null);
 
 const { getApiErrorMessage } = useApiError();
+const {
+  page,
+  perPage,
+  search,
+  debouncedSearch,
+  queryParams,
+  setPage,
+  setSearch,
+} = usePaginatedTable({
+  initialPerPage: 10,
+});
+
+const totalPages = ref(1);
 
 const isEditMode = computed(() => Boolean(selectedProduct.value));
 
@@ -69,17 +81,10 @@ const fetchProducts = async () => {
   requestError.value = "";
 
   try {
-    const params: Record<string, string | number> = {
-      page: page.value,
-      per_page: perPage.value,
+    const response = await listProductsRequest({
+      ...queryParams.value,
       ...sortParams.value,
-    };
-
-    if (search.value.trim()) {
-      params.search = search.value.trim();
-    }
-
-    const response = await listProductsRequest(params);
+    });
     products.value = response.data ?? [];
     totalPages.value = response.meta?.last_page ?? 1;
   } catch (error) {
@@ -169,8 +174,7 @@ const onDialogSave = () => {
 };
 
 const onSearchChange = (value: string) => {
-  search.value = value;
-  page.value = 1;
+  setSearch(value);
 };
 
 onMounted(async () => {
@@ -178,12 +182,12 @@ onMounted(async () => {
   await fetchProducts();
 });
 
-watch([page, perPage, search, selectedSort], async () => {
+watch([page, perPage, debouncedSearch, selectedSort], async () => {
   await fetchProducts();
 });
 
 watch(selectedSort, () => {
-  page.value = 1;
+  setPage(1);
 });
 </script>
 
@@ -272,49 +276,86 @@ watch(selectedSort, () => {
     @confirm="confirmDelete"
   />
 
-  <VDialog
+  <AppDetailDialog
     :model-value="isViewOpen"
-    max-width="560"
+    title="Detalhes do produto"
+    subtitle="Informações do cadastro e do usuário associado."
+    :max-width="860"
     @update:model-value="isViewOpen = $event"
   >
-    <VCard class="rounded-2xl border border-zinc-200">
-      <VCardTitle class="text-lg font-semibold text-zinc-900"
-        >Detalhes do produto</VCardTitle
+    <div class="grid gap-3 md:grid-cols-2">
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">ID</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ selectedProduct?.id }}
+        </p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">Preço</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ formatCurrency(selectedProduct?.price) }}
+        </p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">Nome</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ selectedProduct?.name }}
+        </p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">Usuário</p>
+        <p class="mt-1 text-sm font-semibold text-zinc-900">
+          {{ selectedProduct?.user?.name || "-" }}
+        </p>
+        <p class="mt-1 text-xs text-zinc-500">
+          {{ selectedProduct?.user?.email || "-" }}
+        </p>
+      </div>
+      <div
+        class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 md:col-span-2"
       >
-      <VCardText>
-        <div class="grid gap-3">
-          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
-              Nome
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
+          Auditoria
+        </p>
+        <div class="mt-3 grid gap-3 md:grid-cols-2">
+          <div class="rounded-xl bg-white px-3 py-2">
+            <p class="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
+              Criado em
             </p>
-            <p class="mt-1 font-medium text-zinc-900">
-              {{ selectedProduct?.name }}
-            </p>
-          </div>
-          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
-              Descrição
-            </p>
-            <p class="mt-1 font-medium text-zinc-900">
-              {{ selectedProduct?.description || "-" }}
+            <p class="mt-1 text-sm font-semibold text-zinc-900">
+              {{
+                selectedProduct?.created_at
+                  ? formatDateTime(selectedProduct.created_at)
+                  : "-"
+              }}
             </p>
           </div>
-          <div class="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
-              Preço
+          <div class="rounded-xl bg-white px-3 py-2">
+            <p class="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
+              Atualizado em
             </p>
-            <p class="mt-1 font-medium text-zinc-900">
-              {{ formatCurrency(selectedProduct?.price) }}
+            <p class="mt-1 text-sm font-semibold text-zinc-900">
+              {{
+                selectedProduct?.updated_at
+                  ? formatDateTime(selectedProduct.updated_at)
+                  : "-"
+              }}
             </p>
           </div>
         </div>
-      </VCardText>
-      <VCardActions class="px-6 pb-5">
-        <VSpacer />
-        <VBtn variant="outlined" color="secondary" @click="isViewOpen = false"
-          >Fechar</VBtn
+      </div>
+      <div
+        class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 md:col-span-2"
+      >
+        <p class="text-xs uppercase tracking-[0.16em] text-zinc-500">
+          Descrição
+        </p>
+        <p
+          class="mx-auto mt-3 max-w-3xl text-center text-sm leading-6 text-zinc-900 whitespace-pre-line"
         >
-      </VCardActions>
-    </VCard>
-  </VDialog>
+          {{ selectedProduct?.description || "-" }}
+        </p>
+      </div>
+    </div>
+  </AppDetailDialog>
 </template>

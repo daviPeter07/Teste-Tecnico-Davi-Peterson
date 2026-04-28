@@ -33,6 +33,12 @@ body {
   padding-left: 14px;
 }
 
+.auth-input .v-field__input input::placeholder,
+.auth-textarea textarea::placeholder {
+  color: #a1a1aa;
+  opacity: 1;
+}
+
 .auth-input .v-field {
   border: 1px solid #a1a1aa;
   border-radius: 10px;
@@ -57,6 +63,30 @@ body {
 }
 
 .auth-input.v-input--focused .v-field {
+  border-color: var(--color-orange);
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.15);
+}
+
+.auth-textarea .v-field__input {
+  align-items: flex-start;
+  padding-top: 12px;
+}
+
+.auth-textarea textarea {
+  line-height: 1.6;
+}
+
+.auth-textarea .v-field {
+  border: 1px solid #a1a1aa;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.auth-textarea .v-field--variant-outlined .v-field__outline {
+  display: none;
+}
+
+.auth-textarea.v-input--focused .v-field {
   border-color: var(--color-orange);
   box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.15);
 }
